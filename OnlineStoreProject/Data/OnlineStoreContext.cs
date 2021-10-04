@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnlineStoreProject.Data.EntityConfigurations;
 using OnlineStoreProject.Models;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,13 @@ namespace OnlineStoreProject.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ShopBasket> ShopBaskets { get; set; }
         public DbSet<ShopBasketRow> ShopBasketRows { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new DiscountConfiguration())
+                .ApplyConfiguration(new ProductConfiguration())
+                .ApplyConfiguration(new ShopBasketConfiguration())
+                .ApplyConfiguration(new CategoryConfiguration());
+        }
     }
 }
