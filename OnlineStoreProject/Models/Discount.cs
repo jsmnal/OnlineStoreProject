@@ -12,6 +12,7 @@ namespace OnlineStoreProject.Models
         public string Description { get; set; }
         public decimal DiscountPercentage { get; set; }
         public bool ActivityState { get; set; }
-
+        // Discount can have many Products
+        public List<Product> Products { get; set; }
     }
 }
