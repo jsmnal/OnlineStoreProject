@@ -11,6 +11,8 @@ namespace OnlineStoreProject.Models
         public decimal Total { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
+        // ShopBasket can have many ShopBasketRows
+        public List<ShopBasketRow> ShopBasketRow { get; set; }
 
     }
 }
