@@ -30,6 +30,7 @@ namespace OnlineStoreProject.Data
                 .ApplyConfiguration(new ShopBasketConfiguration())
                 .ApplyConfiguration(new CategoryConfiguration());
 
+            // TODO: Create separate configure files to entity classes?
             modelBuilder.Entity<OnlineStoreUser>(entity =>
             {
                 entity.ToTable(name: "User");
