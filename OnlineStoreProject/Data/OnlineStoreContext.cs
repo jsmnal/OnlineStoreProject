@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OnlineStoreProject.Data.EntityConfigurations;
 using OnlineStoreProject.Models;
 using System;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace OnlineStoreProject.Data
 {
-    public class OnlineStoreContext : DbContext
+    public class OnlineStoreContext : IdentityDbContext<OnlineStoreUser>
     {
-        public OnlineStoreContext( DbContextOptions options) : base(options)
+        public OnlineStoreContext( DbContextOptions<OnlineStoreContext> options) : base(options)
         {
         }
 
@@ -22,6 +23,7 @@ namespace OnlineStoreProject.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new DiscountConfiguration())
                 .ApplyConfiguration(new ProductConfiguration())
                 .ApplyConfiguration(new ShopBasketConfiguration())
