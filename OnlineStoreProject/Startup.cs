@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OnlineStoreProject.Data;
+using OnlineStoreProject.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,15 @@ namespace OnlineStoreProject
             services.AddDbContext<OnlineStoreContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("LocalSQLServer"))
             );
+
+            // TODO: Check options to use in Identity: 
+            // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-5.0#identity-options
+            services.AddIdentityCore<OnlineStoreUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequiredLength = 8;
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<OnlineStoreContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +50,8 @@ namespace OnlineStoreProject
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
