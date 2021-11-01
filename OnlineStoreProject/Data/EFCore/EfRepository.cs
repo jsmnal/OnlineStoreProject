@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace OnlineStoreProject.Data.EFCore
 {
-    public class EfRepository<T> : IRepository<T> where T : class
+    public abstract class EfRepository<T, TContext> : IRepository<T> where T : class where TContext : DbContext
     {
         private readonly OnlineStoreContext _context;
         public EfRepository(OnlineStoreContext context)
@@ -19,19 +20,31 @@ namespace OnlineStoreProject.Data.EFCore
             return entity;
         }
 
-        public Task<T> Delete(int Id)
+        public async Task<T> Delete(int Id)
         {
-            throw new NotImplementedException();
+            var entity = await _context.Set<T>().FindAsync(Id);
+            if (entity == null)
+            {
+                return entity;
+            }
+
+            _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
-        public Task<T> Get(int Id)
+        public async Task<T> Get(int Id)
         {
-            throw new NotImplementedException();
+            var entity = await _context.Set<T>().FindAsync(Id);
+            return entity;
+
         }
 
-        public Task<T> Update(T entity)
+        public async Task<T> Update(T entity)
         {
-            throw new NotImplementedException();
+            _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return entity;
         }
     }
 }
