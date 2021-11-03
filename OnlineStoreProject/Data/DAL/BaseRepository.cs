@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OnlineStoreProject.Data.EFCore
+namespace OnlineStoreProject.Data.DAL
 {
-    public abstract class EfRepository<T, TContext> : IRepository<T> where T : class where TContext : DbContext
+    public abstract class BaseRepository<T> : IRepository<T> where T : class
     {
         private readonly OnlineStoreContext _context;
-        public EfRepository(OnlineStoreContext context)
+        public BaseRepository(OnlineStoreContext context)
         {
             _context = context;
         }
@@ -45,6 +45,11 @@ namespace OnlineStoreProject.Data.EFCore
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return entity;
+        }
+
+        public async Task<List<T>> GetAll()
+        {
+            return await _context.Set<T>().ToListAsync();
         }
     }
 }
