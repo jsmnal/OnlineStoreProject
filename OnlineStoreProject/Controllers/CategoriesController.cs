@@ -73,7 +73,7 @@ namespace OnlineStoreProject.Controllers
         }
 
         [HttpGet]
-        public  async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        public  async Task<IEnumerable<Category>> GetCategories()
         {
             return await _repository.GetAll();
         }

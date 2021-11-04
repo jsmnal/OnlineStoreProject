@@ -47,9 +47,9 @@ namespace OnlineStoreProject.Data.DAL
             return entity;
         }
 
-        public async Task<List<T>> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _context.Set<T>().ToArrayAsync();
         }
     }
 }
