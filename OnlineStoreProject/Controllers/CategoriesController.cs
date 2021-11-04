@@ -39,11 +39,13 @@ namespace OnlineStoreProject.Controllers
         // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
+        public async Task<ActionResult> PutCategory(int id, Category category)
         {
-            if (id != category.Id)
+            var existingCategory = await _repository.Get(id);
+
+            if (existingCategory is null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             await _repository.Update(category);
@@ -61,15 +63,18 @@ namespace OnlineStoreProject.Controllers
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Category>> DeleteCategory(int id)
+        public async Task<ActionResult> DeleteCategory(int id)
         {
-            var category = await _repository.Delete(id);
-            if (category == null)
+            var existingCategory = await _repository.Get(id);
+
+            if (existingCategory is null)
             {
                 return NotFound();
             }
 
-            return category;
+            await _repository.Delete(id);
+
+            return NoContent();
         }
 
         [HttpGet]
