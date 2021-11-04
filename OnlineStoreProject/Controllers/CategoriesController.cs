@@ -15,9 +15,9 @@ namespace OnlineStoreProject.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly CategoryRepository _repository;
+        private readonly ICategoryRepository _repository;
 
-        public CategoriesController(CategoryRepository repository)
+        public CategoriesController(ICategoryRepository repository)
         {
             _repository = repository;
         }
