@@ -53,6 +53,136 @@ namespace OnlineStoreProject.UnitTests.Controllers
                 options => options.ComparingByMembers<Category>());
         }
 
+        [Fact]
+        public async Task GetCategories_WithExistingCategories_ReturnsAllCategories()
+        {
+            // Arrange
+            var expectedCategories = new[]
+            {
+                CreateRandomCategory(),
+                CreateRandomCategory(),
+                CreateRandomCategory()
+            };
+
+            repositoryStub.Setup(repo => repo.GetAll())
+                .ReturnsAsync(expectedCategories);
+
+            var controller = new CategoriesController(repositoryStub.Object);
+
+            // Act
+            var actualCategories = await controller.GetCategories();
+
+            // Assertion
+            actualCategories.Should().BeEquivalentTo(
+                expectedCategories,
+                options => options.ComparingByMembers<Category>());
+        }
+
+        [Fact]
+        public async Task PostCategory_WithCategoryToCreate_ReturnCreatedCategory()
+        {
+            // Arrange
+            var categoryToCreate = CreateRandomCategory();
+
+            var controller = new CategoriesController(repositoryStub.Object);
+
+            // Act
+            var result = await controller.PostCategory(categoryToCreate);
+
+            // Assert
+            var createdCategory = (result.Result as CreatedAtActionResult).Value as Category;
+            categoryToCreate.Should().BeEquivalentTo(
+                createdCategory,
+                options => options.ComparingByMembers<Category>()
+                );
+            createdCategory.Name.Should().Be("TestCategory");
+            createdCategory.Description.Should().Be("Tessting");
+        }
+
+        [Fact]
+        public async Task PutCategory_WithExistingCategory_ReturnNoContent()
+        {
+            // Arrenge
+            Category existingCategory = CreateRandomCategory();
+
+            repositoryStub.Setup(repo => repo.Get(It.IsAny<int>()))
+                .ReturnsAsync(existingCategory);
+
+            var categoryId = existingCategory.Id;
+            var categoryToUpdate = new Category()
+            {
+                Description = "Updated Desc",
+                Name = "Updated Name"
+            };
+
+            var controller = new CategoriesController(repositoryStub.Object);
+
+            // Act
+            var result = await controller.PutCategory(categoryId, categoryToUpdate);
+
+            // Assert
+            result.Should().BeOfType<NoContentResult>();
+        }
+
+        [Fact]
+        public async Task PutCategory_WithUnexistingCategory_ReturnsNotFound()
+        {
+            // Arrange
+            Category existingCategory = CreateRandomCategory();
+            repositoryStub.Setup(repo => repo.Get(It.IsAny<int>()))
+                .ReturnsAsync((Category)null);
+
+            var categoryId = existingCategory.Id;
+            var categoryToUpdate = new Category()
+            {
+                Description = "Updated Desc",
+                Name = "Updated Name"
+            };
+
+            var controller = new CategoriesController(repositoryStub.Object);
+
+            // Act
+            var result = await controller.PutCategory(categoryId, categoryToUpdate);
+
+            // Assert
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task DeleteCategory_WithExistingItem_ReturnsNoContent()
+        {
+            // Arrenge
+            Category existingCategory = CreateRandomCategory();
+
+            repositoryStub.Setup(repo => repo.Get(It.IsAny<int>()))
+                .ReturnsAsync(existingCategory);
+
+            var controller = new CategoriesController(repositoryStub.Object);
+
+            // Act
+            var result = await controller.DeleteCategory(existingCategory.Id);
+
+            // Assert
+            result.Should().BeOfType<NoContentResult>();
+        }
+
+        [Fact]
+        public async Task DeleteCategory_WithUnexistingCategory_ReturnsNotFound()
+        {
+            // Arrange
+            Category existingCategory = CreateRandomCategory();
+            repositoryStub.Setup(repo => repo.Get(It.IsAny<int>()))
+                .ReturnsAsync((Category)null);
+
+            var controller = new CategoriesController(repositoryStub.Object);
+
+            // Act
+            var result = await controller.DeleteCategory(existingCategory.Id);
+
+            // Assert
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
         private Category CreateRandomCategory()
         {
             return new()
