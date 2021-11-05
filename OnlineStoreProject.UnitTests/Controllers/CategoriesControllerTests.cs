@@ -15,7 +15,7 @@ namespace OnlineStoreProject.UnitTests.Controllers
 {
     public class CategoriesControllerTests
     {
-        private readonly Mock<ICategoryRepository> repositoryStub = new Mock<ICategoryRepository>();
+        private readonly Mock<IRepository<Category>> repositoryStub = new Mock<IRepository<Category>>();
         private readonly Random rand = new();
         [Fact]
         public async Task GetCategory_WithUnexistingCategory_ReturnsNotFound()
