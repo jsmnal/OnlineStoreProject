@@ -30,6 +30,10 @@ namespace OnlineStoreProject
             services.AddDbContext<OnlineStoreContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("LocalSQLServer"))
             );
+            services.AddControllers();
+
+            services.AddScoped<UnitOfWork>();
+            
 
             // TODO: Check options to use in Identity: 
             // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-5.0#identity-options
