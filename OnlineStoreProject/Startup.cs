@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OnlineStoreProject.Data;
+using OnlineStoreProject.Data.DAL;
 using OnlineStoreProject.Models;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,9 @@ namespace OnlineStoreProject
                 options.UseSqlServer(Configuration.GetConnectionString("LocalSQLServer"))
             );
 
+            services.AddControllers();
+            services.AddScoped<IRepository<Category>, CategoryRepository>();
+
             // TODO: Check options to use in Identity: 
             // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-5.0#identity-options
             services.AddIdentityCore<OnlineStoreUser>(options =>
@@ -49,19 +53,15 @@ namespace OnlineStoreProject
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseHttpsRedirection();
+
             app.UseRouting();
 
             app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }
