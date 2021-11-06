@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace OnlineStoreProject.Models
         public decimal Price { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Views { get; set; }
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
         public string ImagePath { get; set; }
         // Product can have one Category
         public int CategoryId { get; set; }
