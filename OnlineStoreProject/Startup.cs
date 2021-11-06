@@ -31,6 +31,10 @@ namespace OnlineStoreProject
             services.AddDbContext<OnlineStoreContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("LocalSQLServer"))
             );
+            services.AddControllers();
+
+            services.AddScoped<UnitOfWork>();
+            
 
             services.AddControllers();
             services.AddScoped<IRepository<Category>, CategoryRepository>();

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OnlineStoreProject.Data
 {
-    public class UnitOfWork
+    public class UnitOfWork: IDisposable
     {
         private readonly OnlineStoreContext _context;
         private BaseRepository<Category> _categoryRepository;
@@ -29,6 +29,12 @@ namespace OnlineStoreProject.Data
         public async Task<int> Save()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+            GC.SuppressFinalize(this);
         }
 
     }
