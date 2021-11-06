@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineStoreProject.Data;
 using OnlineStoreProject.Data.DAL;
-using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
 
 namespace OnlineStoreProject.Controllers

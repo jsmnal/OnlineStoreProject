@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineStoreProject.Data;
 using OnlineStoreProject.Data.DAL;
 using OnlineStoreProject.Models;
+using OnlineStoreProject.Utils;
 
 namespace OnlineStoreProject.Controllers
 {
@@ -16,10 +18,12 @@ namespace OnlineStoreProject.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IRepository<Product> _repository;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ProductsController(IRepository<Product> repository)
+        public ProductsController(IRepository<Product> repository, IWebHostEnvironment hostEnvironment)
         {
             _repository = repository;
+            _hostEnvironment = hostEnvironment;
         }
 
         // GET: api/Products
@@ -60,8 +64,14 @@ namespace OnlineStoreProject.Controllers
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct([FromForm]Product product)
         {
+            ImageUpload imageUpload = new(_hostEnvironment);
+            if (product.ImageFile is not null)
+            {
+                product.ImagePath = await imageUpload.Upload(product.ImageFile);
+            };
+            
             await _repository.Add(product);
             return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
@@ -75,6 +85,8 @@ namespace OnlineStoreProject.Controllers
             {
                 return NotFound();
             }
+            ImageUpload imageUpload = new(_hostEnvironment);
+            imageUpload.Delete(existingProduct);
 
             await _repository.Delete(id);
             return NoContent();
