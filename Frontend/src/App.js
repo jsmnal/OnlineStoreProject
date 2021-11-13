@@ -1,14 +1,12 @@
-import { Navbar } from 'react-bootstrap';
+import TitleHeader from './components/TitleHeader';
+import Navigation from './components/Navigation';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header"></header>
-      <Navbar bg='primary'>
-        <Navbar.Brand style={{color: '#ffffff'}}>
-          Online Store
-        </Navbar.Brand>
-      </Navbar>
+      <TitleHeader />
+      <Navigation />
     </div>
   );
 }
