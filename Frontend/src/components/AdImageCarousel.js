@@ -1,5 +1,4 @@
 import { Carousel, Container } from 'react-bootstrap';
-import 'holderjs';
 
 const AdImageCarousel = () => {
     return (

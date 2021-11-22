@@ -1,7 +1,7 @@
 import TitleHeader from './components/TitleHeader';
 import Navigation from './components/Navigation';
 import AdImageCarousel from './components/AdImageCarousel';
-
+import PopularImages from './components/PopularImages';
 
 function App() {
   return (
@@ -10,6 +10,7 @@ function App() {
       <TitleHeader />
       <Navigation />
       <AdImageCarousel />
+      <PopularImages />
     </div>
   );
 }
