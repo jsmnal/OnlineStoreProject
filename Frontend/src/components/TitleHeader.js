@@ -1,12 +1,10 @@
-import { Stack } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 const TitleHeader = () => {
     return (
-        <Stack>
-            <div style={{'font-size':'40px'}}>
-                Online Store
-            </div>
-        </Stack>
+        <Container style={{'font-size':'40px'}} className='d-block justify-content-left'>
+            Online Store
+        </Container>
     )
 }
 
