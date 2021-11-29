@@ -33,6 +33,13 @@ namespace OnlineStoreProject
             );
             services.AddControllers();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Development",
+                    builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
+            });
+
             services.AddScoped<UnitOfWork>();          
             services.AddScoped<IRepository<Category>, CategoryRepository>();
             services.AddScoped<IRepository<Discount>, DiscountRepository>();
@@ -63,6 +70,8 @@ namespace OnlineStoreProject
             app.UseRouting();
 
             app.UseAuthentication();
+
+            app.UseCors("Development");
 
             app.UseEndpoints(endpoints =>
             {
