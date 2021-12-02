@@ -2,6 +2,7 @@ import TitleHeader from './components/TitleHeader';
 import Navigation from './components/Navigation';
 import AdImageCarousel from './components/AdImageCarousel';
 import ImageCardRow from './components/ImageCardRow';
+import Header from './components/Header';
 
 function App() {
   return (
@@ -10,7 +11,9 @@ function App() {
       <TitleHeader />
       <Navigation />
       <AdImageCarousel />
-      <ImageCardRow />
+      <Header title='The most popular'/>
+      <ImageCardRow/>
+      <Header title ='The newest'/>
       <ImageCardRow />
     </div>
   );
