@@ -16,7 +16,7 @@ namespace OnlineStoreProject.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.10")
+                .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -168,6 +168,20 @@ namespace OnlineStoreProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categorys");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Pictures of different animals",
+                            Name = "Animal pictures"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Pictures of beatifull nature",
+                            Name = "Nature pictures"
+                        });
                 });
 
             modelBuilder.Entity("OnlineStoreProject.Models.Discount", b =>
@@ -195,6 +209,24 @@ namespace OnlineStoreProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Discounts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ActivityState = true,
+                            Description = "Discount for winter times",
+                            DiscountPercentage = 10.00m,
+                            Name = "Winter special"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ActivityState = false,
+                            Description = "Black Friday sales",
+                            DiscountPercentage = 25.00m,
+                            Name = "Black Friday"
+                        });
                 });
 
             modelBuilder.Entity("OnlineStoreProject.Models.OnlineStoreUser", b =>
@@ -316,6 +348,47 @@ namespace OnlineStoreProject.Migrations
                     b.HasIndex("DiscountId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            CreatedDate = new DateTime(2021, 1, 10, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Picture of a cute dog",
+                            DiscountId = 1,
+                            ImagePath = "",
+                            Name = "Dog Picture",
+                            Price = 19.99m,
+                            StockQuantity = 12,
+                            Views = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 1,
+                            CreatedDate = new DateTime(2021, 6, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Picture of a not so cute cat",
+                            DiscountId = 2,
+                            ImagePath = "",
+                            Name = "Cat Picture",
+                            Price = 12.90m,
+                            StockQuantity = 25,
+                            Views = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 2,
+                            CreatedDate = new DateTime(2021, 12, 1, 9, 30, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Picture of a beautifull winter forest from Lapland",
+                            DiscountId = 1,
+                            ImagePath = "",
+                            Name = "Winter forest",
+                            Price = 49.99m,
+                            StockQuantity = 2,
+                            Views = 0
+                        });
                 });
 
             modelBuilder.Entity("OnlineStoreProject.Models.ShopBasket", b =>

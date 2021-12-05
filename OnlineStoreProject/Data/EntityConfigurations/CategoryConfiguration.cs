@@ -14,6 +14,22 @@ namespace OnlineStoreProject.Data.EntityConfigurations
         {
             builder.Property(c => c.Name).HasColumnType("nvarchar").HasMaxLength(50);
             builder.Property(c => c.Description).HasColumnType("nvarchar").HasMaxLength(50);
+
+            // Seed initial data to table
+            builder.HasData(
+                new Category
+                {
+                    Id = 1,
+                    Name = "Animal pictures",
+                    Description = "Pictures of different animals"
+                },
+                new Category
+                {
+                    Id = 2,
+                    Name = "Nature pictures",
+                    Description = "Pictures of beatifull nature"
+                }
+            );
         }
     }
 }
