@@ -25,7 +25,7 @@ const ImageCardRow = () => {
     <Container style={{'marginTop':'20px'}} className='d-flex justify-content-center'>
         <Row>
             {loading && products.map((product) => (
-                <ImageCard key={product.id} image={product.imagePath} name={product.name} price={product.price}/> 
+                <ImageCard key={product.id} image={'https://localhost:44310/images/' + product.imagePath} name={product.name} price={product.price}/> 
             ))}
         </Row>
     </Container>
