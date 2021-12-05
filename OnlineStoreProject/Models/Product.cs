@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace OnlineStoreProject.Models
 {
@@ -17,6 +18,7 @@ namespace OnlineStoreProject.Models
         public DateTime CreatedDate { get; set; }
         public int Views { get; set; }
         [NotMapped]
+        [JsonIgnore]
         public IFormFile ImageFile { get; set; }
         public string ImagePath { get; set; }
         // Product can have one Category
