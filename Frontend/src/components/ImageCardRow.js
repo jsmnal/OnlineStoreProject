@@ -1,12 +1,10 @@
 import { Container, Row } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import ImageCard from './ImageCard';
-import axios from 'axios';
+import productService from '../services/product';
+import config from '../utils/config';
 
 const ImageCardRow = () => {
-  const IMAGE_URL = 'https://localhost:5001/images/';
-  const PRODUCTS_URL = 'https://localhost:5001/api/Products/';
-
   useEffect(() => {
     getProducts();
   }, []);
@@ -16,8 +14,8 @@ const ImageCardRow = () => {
 
   const getProducts = async () => {
     try {
-      const res = await axios.get(PRODUCTS_URL);
-      setProducts(res.data);
+      const res = await productService.getAll();
+      setProducts(res);
       setLoading(true);
     } catch (err) {
       alert(err.message);
@@ -33,7 +31,9 @@ const ImageCardRow = () => {
           products.map((product) => (
             <ImageCard
               key={product.id}
-              image={product.imagePath ? IMAGE_URL + product.imagePath : ''}
+              image={
+                product.imagePath ? config.IMAGE_URL + product.imagePath : ''
+              }
               name={product.name}
               price={product.price}
             />
