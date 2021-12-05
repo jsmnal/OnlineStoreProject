@@ -15,6 +15,26 @@ namespace OnlineStoreProject.Data.EntityConfigurations
             builder.Property(d => d.Name).HasColumnType("nvarchar").HasMaxLength(50);
             builder.Property(d => d.Description).HasColumnType("nvarchar").HasMaxLength(200);
             builder.Property(d => d.DiscountPercentage).HasPrecision(10, 2);
+
+            // Seed initial data to table
+            builder.HasData(
+                new Discount
+                {
+                    Id = 1,
+                    Name = "Winter special",
+                    Description = "Discount for winter times",
+                    DiscountPercentage = 10.00M,
+                    ActivityState = true
+                },
+                new Discount
+                {
+                    Id = 2,
+                    Name = "Black Friday",
+                    Description = "Black Friday sales",
+                    DiscountPercentage = 25.00M,
+                    ActivityState = false
+                }
+            );
         }
     }
 }
