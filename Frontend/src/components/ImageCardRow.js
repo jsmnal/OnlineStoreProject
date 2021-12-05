@@ -31,6 +31,7 @@ const ImageCardRow = () => {
           products.map((product) => (
             <ImageCard
               key={product.id}
+              id={product.id}
               image={
                 product.imagePath ? config.IMAGE_URL + product.imagePath : ''
               }
