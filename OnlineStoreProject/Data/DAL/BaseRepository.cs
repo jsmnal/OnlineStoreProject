@@ -13,14 +13,14 @@ namespace OnlineStoreProject.Data.DAL
         {
             _context = context;
         }
-        public async Task<T> Add(T entity)
+        public virtual async Task<T> Add(T entity)
         {
             _context.Set<T>().Add(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
 
-        public async Task<T> Delete(int Id)
+        public virtual async Task<T> Delete(int Id)
         {
             var entity = await _context.Set<T>().FindAsync(Id);
             if (entity == null)
@@ -33,7 +33,7 @@ namespace OnlineStoreProject.Data.DAL
             return entity;
         }
 
-        public async Task<T> Get(int Id)
+        public virtual async Task<T> Get(int Id)
         {
             var entity = await _context.Set<T>().FindAsync(Id);
             return entity;
@@ -47,7 +47,7 @@ namespace OnlineStoreProject.Data.DAL
             return entity;
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
             return await _context.Set<T>().ToArrayAsync();
         }
