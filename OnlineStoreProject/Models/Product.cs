@@ -29,6 +29,7 @@ namespace OnlineStoreProject.Models
         public int DiscountId { get; set; }
         [ForeignKey("DiscountId")]
         public Discount Discount { get; set; }
+        [JsonIgnore]
         // Product can be ones in ShopBasketRow
         public ShopBasketRow ShopBasketRow { get; set; }
     }
