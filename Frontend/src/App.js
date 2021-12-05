@@ -1,21 +1,19 @@
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 import TitleHeader from './components/TitleHeader';
 import Navigation from './components/Navigation';
-import AdImageCarousel from './components/AdImageCarousel';
-import ImageCardRow from './components/ImageCardRow';
-import Header from './components/Header';
+import Home from './routes/Home';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header"></header>
+    <Router>
       <TitleHeader />
       <Navigation />
-      <AdImageCarousel />
-      <Header title="The most popular" />
-      <ImageCardRow />
-      <Header title="The newest" />
-      <ImageCardRow />
-    </div>
+      <Routes>
+        <Route exact path="/" element={<Home />} />
+        <Route exact path="/products/:id" element={<Home />} />
+      </Routes>
+    </Router>
   );
 }
 
