@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OnlineStoreProject.Migrations
 {
-    public partial class InitalMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -266,6 +266,39 @@ namespace OnlineStoreProject.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Categorys",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Pictures of different animals", "Animal pictures" },
+                    { 2, "Pictures of beatifull nature", "Nature pictures" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Discounts",
+                columns: new[] { "Id", "ActivityState", "Description", "DiscountPercentage", "Name" },
+                values: new object[,]
+                {
+                    { 1, true, "Discount for winter times", 10.00m, "Winter special" },
+                    { 2, false, "Black Friday sales", 25.00m, "Black Friday" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "CategoryId", "CreatedDate", "Description", "DiscountId", "ImagePath", "Name", "Price", "StockQuantity", "Views" },
+                values: new object[] { 1, 1, new DateTime(2021, 1, 10, 10, 0, 0, 0, DateTimeKind.Unspecified), "Picture of a cute dog", 1, "", "Dog Picture", 19.99m, 12, 0 });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "CategoryId", "CreatedDate", "Description", "DiscountId", "ImagePath", "Name", "Price", "StockQuantity", "Views" },
+                values: new object[] { 3, 2, new DateTime(2021, 12, 1, 9, 30, 0, 0, DateTimeKind.Unspecified), "Picture of a beautifull winter forest from Lapland", 1, "", "Winter forest", 49.99m, 2, 0 });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "CategoryId", "CreatedDate", "Description", "DiscountId", "ImagePath", "Name", "Price", "StockQuantity", "Views" },
+                values: new object[] { 2, 1, new DateTime(2021, 6, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Picture of a not so cute cat", 2, "", "Cat Picture", 12.90m, 25, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
