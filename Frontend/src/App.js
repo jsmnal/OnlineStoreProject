@@ -11,9 +11,9 @@ function App() {
       <TitleHeader />
       <Navigation />
       <AdImageCarousel />
-      <Header title='The most popular'/>
-      <ImageCardRow/>
-      <Header title ='The newest'/>
+      <Header title="The most popular" />
+      <ImageCardRow />
+      <Header title="The newest" />
       <ImageCardRow />
     </div>
   );
