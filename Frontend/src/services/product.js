@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL = 'https://localhost:5001/api/Products/';
+const URL = 'https://localhost:44310/api/Products/';
 
 const getAll = async () => {
   const response = await axios.get(URL);
@@ -12,4 +12,19 @@ const getOne = async (id) => {
   return response.data;
 };
 
-export default { getAll, getOne };
+const getFourNewest = async () => {
+  const response = await axios.get(URL + 'limit=4');
+  return response.data;
+};
+
+const getFourMostPopular = async () => {
+  const response = await axios.get(URL + 'popular=4');
+  return response.data;
+};
+
+const getWithCategory = async (category) => {
+  const response = await axios.get(URL + 'category=' + { category });
+  return response.data;
+};
+
+export default { getAll, getOne, getFourNewest, getFourMostPopular, getWithCategory };
