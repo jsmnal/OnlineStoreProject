@@ -1,5 +1,4 @@
 ﻿using OnlineStoreProject.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace OnlineStoreProject.Data.DAL
 {
-    public class ProductRepository : BaseRepository<Product>
+    public class ProductRepository : BaseRepository<Product>, IProductRepository
     {
         private readonly OnlineStoreContext _context;
         public ProductRepository(OnlineStoreContext context) : base(context)
