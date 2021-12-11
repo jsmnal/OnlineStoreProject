@@ -8,5 +8,6 @@ namespace OnlineStoreProject.Data.DAL
 {
     public interface ICategoryRepository : IRepository<Category>
     {
+        Task<IEnumerable<Category>> GetWithName(string name);
     }
 }

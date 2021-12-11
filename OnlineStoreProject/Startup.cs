@@ -46,8 +46,8 @@ namespace OnlineStoreProject
             services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddScoped<IRepository<ShopBasketRow>, ShopBasketRowRepository>();
             services.AddScoped<IRepository<ShopBasket>, ShopBasketRepository>();
-            services.AddScoped<ProductRepository>();
-            services.AddScoped<CategoryRepository>();
+            services.AddScoped<IProductRepository,ProductRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             // TODO: Check options to use in Identity: 
             // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-5.0#identity-options
