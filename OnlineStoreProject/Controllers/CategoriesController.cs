@@ -16,10 +16,11 @@ namespace OnlineStoreProject.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly IRepository<Category> _repository;
-
-        public CategoriesController(IRepository<Category> repository)
+        private readonly CategoryRepository _categoryRepository;
+        public CategoriesController(IRepository<Category> repository, CategoryRepository categoryRepository)
         {
             _repository = repository;
+            _categoryRepository = categoryRepository;
         }
 
         // GET: api/Categories/5
@@ -82,5 +83,12 @@ namespace OnlineStoreProject.Controllers
         {
             return await _repository.GetAll();
         }
+
+        [HttpGet("name={name}")]
+        public async Task<IEnumerable<Category>> GetWithCategoryName(string name)
+        {
+            return await _categoryRepository.GetWithName(name);
+        }
+
     }
 }
