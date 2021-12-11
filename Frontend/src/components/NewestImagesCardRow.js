@@ -14,7 +14,7 @@ const NewestImagesCardRow = () => {
 
   const getProducts = async () => {
     try {
-      const res = await productService.getFourNewest();
+      const res = await productService.getNewest(4);
       setProducts(res);
       setLoading(true);
     } catch (err) {

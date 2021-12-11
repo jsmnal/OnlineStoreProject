@@ -14,7 +14,7 @@ const PopularImagesCardRow = () => {
 
   const getProducts = async () => {
     try {
-      const res = await productService.getFourMostPopular();
+      const res = await productService.getMostPopular(4);
       setProducts(res);
       setLoading(true);
     } catch (err) {
