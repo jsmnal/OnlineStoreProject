@@ -1,6 +1,7 @@
 import React from 'react';
 import AdImageCarousel from '../components/AdImageCarousel';
-import ImageCardRow from '../components/ImageCardRow';
+import NewestImagesCardRow from '../components/NewestImagesCardRow';
+import PopularImagesCardRow from '../components/PopularImagesCardRow';
 import Header from '../components/Header';
 
 const Home = () => {
@@ -8,9 +9,9 @@ const Home = () => {
     <div>
       <AdImageCarousel />
       <Header title="The most popular" />
-      <ImageCardRow />
+      <PopularImagesCardRow />
       <Header title="The newest" />
-      <ImageCardRow />
+      <NewestImagesCardRow />
     </div>
   );
 };

@@ -15,18 +15,19 @@ namespace OnlineStoreProject.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly IRepository<Category> _repository;
-
-        public CategoriesController(IRepository<Category> repository)
+        
+        private readonly ICategoryRepository _categoryRepository;
+        public CategoriesController(ICategoryRepository categoryRepository)
         {
-            _repository = repository;
+            
+            _categoryRepository = categoryRepository;
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            var category = await _repository.Get(id);
+            var category = await _categoryRepository.Get(id);
 
             if (category == null)
             {
@@ -41,14 +42,14 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> PutCategory(int id, Category category)
         {
-            var existingCategory = await _repository.Get(id);
+            var existingCategory = await _categoryRepository.Get(id);
 
             if (existingCategory is null)
             {
                 return NotFound();
             }
 
-            await _repository.Update(category);
+            await _categoryRepository.Update(category);
             return NoContent();
         }
 
@@ -57,7 +58,7 @@ namespace OnlineStoreProject.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            await _repository.Add(category);
+            await _categoryRepository.Add(category);
             return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
 
@@ -65,14 +66,14 @@ namespace OnlineStoreProject.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteCategory(int id)
         {
-            var existingCategory = await _repository.Get(id);
+            var existingCategory = await _categoryRepository.Get(id);
 
             if (existingCategory is null)
             {
                 return NotFound();
             }
 
-            await _repository.Delete(id);
+            await _categoryRepository.Delete(id);
 
             return NoContent();
         }
@@ -80,7 +81,14 @@ namespace OnlineStoreProject.Controllers
         [HttpGet]
         public  async Task<IEnumerable<Category>> GetCategories()
         {
-            return await _repository.GetAll();
+            return await _categoryRepository.GetAll();
         }
+
+        [HttpGet("name={name}")]
+        public async Task<IEnumerable<Category>> GetWithCategoryName(string name)
+        {
+            return await _categoryRepository.GetWithName(name);
+        }
+
     }
 }

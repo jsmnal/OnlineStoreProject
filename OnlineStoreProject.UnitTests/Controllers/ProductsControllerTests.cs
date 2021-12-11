@@ -16,7 +16,8 @@ namespace OnlineStoreProject.UnitTests.Controllers
 {
     public class ProductsControllerTests
     {
-        private readonly Mock<IRepository<Product>> repositoryStub = new Mock<IRepository<Product>>();
+        
+        private readonly Mock<IProductRepository> repositoryStub = new Mock<IProductRepository>();
         private readonly Mock<IWebHostEnvironment> hostEnvironmentStub = new Mock<IWebHostEnvironment>();
         private readonly Random rand = new();
 

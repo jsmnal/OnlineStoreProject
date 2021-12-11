@@ -17,27 +17,27 @@ namespace OnlineStoreProject.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IRepository<Product> _repository;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IProductRepository _productRepository;
 
-        public ProductsController(IRepository<Product> repository, IWebHostEnvironment hostEnvironment)
+        public ProductsController(IProductRepository productRepository, IWebHostEnvironment hostEnvironment)
         {
-            _repository = repository;
             _hostEnvironment = hostEnvironment;
+            _productRepository = productRepository;
         }
 
         // GET: api/Products
         [HttpGet]
         public async Task<IEnumerable<Product>> GetProducts()
         {
-            return await _repository.GetAll();
+            return await _productRepository.GetAll();
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var product = await _repository.Get(id);
+            var product = await _productRepository.Get(id);
 
             if (product is null)
             {
@@ -52,12 +52,12 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
-            var existingProduct = await _repository.Get(id);
+            var existingProduct = await _productRepository.Get(id);
             if (existingProduct is null)
             {
                 return NotFound();
             }
-            await _repository.Update(product);
+            await _productRepository.Update(product);
             return NoContent();
         }
 
@@ -72,7 +72,7 @@ namespace OnlineStoreProject.Controllers
                 product.ImagePath = await imageUpload.Upload(product.ImageFile);
             };
             
-            await _repository.Add(product);
+            await _productRepository.Add(product);
             return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
 
@@ -80,7 +80,7 @@ namespace OnlineStoreProject.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var existingProduct = await _repository.Get(id);
+            var existingProduct = await _productRepository.Get(id);
             if (existingProduct is null)
             {
                 return NotFound();
@@ -88,8 +88,26 @@ namespace OnlineStoreProject.Controllers
             ImageUpload imageUpload = new(_hostEnvironment);
             imageUpload.Delete(existingProduct);
 
-            await _repository.Delete(id);
+            await _productRepository.Delete(id);
             return NoContent();
+        }
+
+        [HttpGet("limit={limit}")]
+        public async Task<IEnumerable<Product>> GetNewest(int limit)
+        {
+            return await _productRepository.GetNewest(limit);
+        }
+
+        [HttpGet("category={categoryName}")]
+        public async Task<IEnumerable<Product>> GetWithCategoryName(string categoryName)
+        {
+            return await _productRepository.GetWithCategory(categoryName);
+        }
+
+        [HttpGet("popular={limit}")]
+        public async Task<IEnumerable<Product>> GetPopular(int limit)
+        {
+            return await _productRepository.GetPopular(limit);
         }
     }
 }
