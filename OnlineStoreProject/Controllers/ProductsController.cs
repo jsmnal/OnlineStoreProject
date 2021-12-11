@@ -19,11 +19,13 @@ namespace OnlineStoreProject.Controllers
     {
         private readonly IRepository<Product> _repository;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly ProductRepository _productRepository;
 
-        public ProductsController(IRepository<Product> repository, IWebHostEnvironment hostEnvironment)
+        public ProductsController(IRepository<Product> repository, IWebHostEnvironment hostEnvironment, ProductRepository productRepository)
         {
             _repository = repository;
             _hostEnvironment = hostEnvironment;
+            _productRepository = productRepository;
         }
 
         // GET: api/Products
@@ -90,6 +92,24 @@ namespace OnlineStoreProject.Controllers
 
             await _repository.Delete(id);
             return NoContent();
+        }
+
+        [HttpGet("limit={limit}")]
+        public async Task<IEnumerable<Product>> GetNewest(int limit)
+        {
+            return await _productRepository.GetNewest(limit);
+        }
+
+        [HttpGet("category={categoryName}")]
+        public async Task<IEnumerable<Product>> GetWithCategoryName(string categoryName)
+        {
+            return await _productRepository.GetWithCategory(categoryName);
+        }
+
+        [HttpGet("popular={limit}")]
+        public async Task<IEnumerable<Product>> GetPopular(int limit)
+        {
+            return await _productRepository.GetPopular(limit);
         }
     }
 }
