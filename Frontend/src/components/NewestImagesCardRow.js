@@ -4,7 +4,7 @@ import ImageCard from './ImageCard';
 import productService from '../services/product';
 import config from '../utils/config';
 
-const ImageCardRow = () => {
+const NewestImagesCardRow = () => {
   useEffect(() => {
     getProducts();
   }, []);
@@ -14,7 +14,7 @@ const ImageCardRow = () => {
 
   const getProducts = async () => {
     try {
-      const res = await productService.getAll();
+      const res = await productService.getFourNewest();
       setProducts(res);
       setLoading(true);
     } catch (err) {
@@ -44,4 +44,4 @@ const ImageCardRow = () => {
   );
 };
 
-export default ImageCardRow;
+export default NewestImagesCardRow;
