@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace OnlineStoreProject.Data.DAL
 {
-    public class CategoryRepository : BaseRepository<Category>
+    public class CategoryRepository : BaseRepository<Category>, ICategoryRepository
     {
         private readonly OnlineStoreContext _context;
         public CategoryRepository(OnlineStoreContext context) : base(context)
