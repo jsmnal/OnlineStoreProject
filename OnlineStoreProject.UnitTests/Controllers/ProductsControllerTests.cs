@@ -35,7 +35,6 @@ namespace OnlineStoreProject.UnitTests.Controllers
         }
 
         [Fact]
-
         public async Task GetProduct_WithExistingProduct_ReturnExpectedProduct()
         {
             var expectedProduct = CreateRandomProduct();
@@ -50,7 +49,6 @@ namespace OnlineStoreProject.UnitTests.Controllers
         }
 
         [Fact]
-
         public async Task GetProducts_WithExistingProducts_ReturnsAllProducts()
         {
             var expectedProducts = new[]
@@ -73,7 +71,6 @@ namespace OnlineStoreProject.UnitTests.Controllers
         }
 
         [Fact]
-
         public async Task PostProduct_WithProductToCreate_ReturnCreatedProduct()
         {
             var productToCreate = CreateRandomProduct();
@@ -90,7 +87,6 @@ namespace OnlineStoreProject.UnitTests.Controllers
         }
 
         [Fact]
-
         public async Task PutProduct_WithExistingProduct_ReturnNoContent()
         {
             Product existingProduct = CreateRandomProduct();
@@ -112,7 +108,6 @@ namespace OnlineStoreProject.UnitTests.Controllers
         }
 
         [Fact]
-
         public async Task PutProduct_WithUnexistingProduct_ReturnsNotFound()
         {
             Product existingProduct = CreateRandomProduct();
@@ -148,7 +143,6 @@ namespace OnlineStoreProject.UnitTests.Controllers
         }
 
         [Fact]
-
         public async Task DeleteProduct_WithUnExistingProduct_ReturnsNotFound()
         {
             Product existingProduct = CreateRandomProduct();
@@ -160,6 +154,72 @@ namespace OnlineStoreProject.UnitTests.Controllers
             var result = await controller.DeleteProduct(existingProduct.Id);
 
             result.Should().BeOfType<NotFoundResult>();
+        }
+        
+        [Fact]
+        public async Task GetNewest_WithExistingProducts_ReturnsAsManyProductsThatAreGivenInRequest()
+        {
+            var expectedProducts = new[]
+            {
+                CreateRandomProduct(),
+                CreateRandomProduct(),
+                CreateRandomProduct(),
+
+            };
+
+            repositoryStub.Setup(repo => repo.GetNewest(It.IsAny<int>())).ReturnsAsync(expectedProducts);
+            hostEnvironmentStub.Setup(repo => repo.EnvironmentName).Returns("UnitTestEnvironment");
+
+            var controller = new ProductsController(repositoryStub.Object, hostEnvironmentStub.Object);
+
+            var products = await controller.GetNewest(3);
+
+            products.Should().BeEquivalentTo(expectedProducts, options => options.ComparingByMembers<Product>());
+
+        }
+        
+        [Fact]
+        public async Task GetPopular_WithExistingProducts_ReturnsAsManyProductsThatAreGivenInRequest()
+        {
+            var expectedProducts = new[]
+            {
+                CreateRandomProduct(),
+                CreateRandomProduct(),
+                CreateRandomProduct(),
+
+            };
+
+            repositoryStub.Setup(repo => repo.GetPopular(It.IsAny<int>())).ReturnsAsync(expectedProducts);
+            hostEnvironmentStub.Setup(repo => repo.EnvironmentName).Returns("UnitTestEnvironment");
+
+            var controller = new ProductsController(repositoryStub.Object, hostEnvironmentStub.Object);
+
+            var products = await controller.GetPopular(3);
+
+            products.Should().BeEquivalentTo(expectedProducts, options => options.ComparingByMembers<Product>());
+
+        }
+        
+        [Fact]
+        public async Task GetWithCategory_WithExistingProducts_ReturnsAsManyProductsWhatsFoundWithCategoryName()
+        {
+            var expectedProducts = new[]
+            {
+                CreateRandomProduct(),
+                CreateRandomProduct(),
+                CreateRandomProduct(),
+
+            };
+
+            repositoryStub.Setup(repo => repo.GetWithCategory(It.IsAny<string>())).ReturnsAsync(expectedProducts);
+            hostEnvironmentStub.Setup(repo => repo.EnvironmentName).Returns("UnitTestEnvironment");
+
+            var controller = new ProductsController(repositoryStub.Object, hostEnvironmentStub.Object);
+
+            var products = await controller.GetWithCategoryName("Animal pictures");
+
+            products.Should().BeEquivalentTo(expectedProducts, options => options.ComparingByMembers<Product>());
+
         }
         private Product CreateRandomProduct()
         {
