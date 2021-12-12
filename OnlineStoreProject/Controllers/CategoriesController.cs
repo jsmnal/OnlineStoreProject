@@ -19,7 +19,6 @@ namespace OnlineStoreProject.Controllers
         private readonly ICategoryRepository _categoryRepository;
         public CategoriesController(ICategoryRepository categoryRepository)
         {
-            
             _categoryRepository = categoryRepository;
         }
 
