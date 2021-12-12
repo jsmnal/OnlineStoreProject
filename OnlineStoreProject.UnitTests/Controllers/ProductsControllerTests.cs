@@ -221,6 +221,37 @@ namespace OnlineStoreProject.UnitTests.Controllers
             products.Should().BeEquivalentTo(expectedProducts, options => options.ComparingByMembers<Product>());
 
         }
+        
+        [Fact]
+        public async Task IncreaseProductsViews_WithExistingProduct_ReturnsNoContent()
+        {
+            Product existingProduct = CreateRandomProduct();
+            
+            repositoryStub.Setup(repo => repo.Get(It.IsAny<int>())).ReturnsAsync(existingProduct);
+            hostEnvironmentStub.Setup(repo => repo.EnvironmentName).Returns("UnitTestEnvironment");
+
+            var productId = existingProduct.Id;
+            var controller = new ProductsController(repositoryStub.Object, hostEnvironmentStub.Object);
+
+            var result = await controller.IncreaseProductsViews(productId);
+
+            result.Should().BeOfType<NoContentResult>();
+        }
+
+        [Fact]
+        public async Task IncreaseProductsViews_WithUnexistingProduct_ReturnsNotFound()
+        {
+            Product existingProduct = CreateRandomProduct();
+            repositoryStub.Setup(repo => repo.Get(It.IsAny<int>())).ReturnsAsync((Product)null);
+            hostEnvironmentStub.Setup(repo => repo.EnvironmentName).Returns("UnitTestEnvironment");
+
+            var productId = existingProduct.Id;
+            var controller = new ProductsController(repositoryStub.Object, hostEnvironmentStub.Object);
+
+            var result = await controller.IncreaseProductsViews(productId);
+
+            result.Should().BeOfType<NotFoundResult>();
+        }
         private Product CreateRandomProduct()
         {
             return new()
@@ -229,6 +260,7 @@ namespace OnlineStoreProject.UnitTests.Controllers
                 Name = "TestProduct",
                 Description = "Some product",
                 StockQuantity = 40,
+                Views = 0,
             };
         }
     }
