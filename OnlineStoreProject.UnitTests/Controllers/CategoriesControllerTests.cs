@@ -182,6 +182,42 @@ namespace OnlineStoreProject.UnitTests.Controllers
             // Assert
             result.Should().BeOfType<NotFoundResult>();
         }
+        
+        [Fact]
+        public async Task GetWithCategoryName_WithUnexistingCategory_ReturnsEmptyArray()
+        {
+            // Arrange
+            repositoryStub.Setup(repo => repo.GetWithName(It.IsAny<string>()))
+                .ReturnsAsync((IEnumerable<Category>)null);
+
+            var controller = new CategoriesController(repositoryStub.Object);
+
+            // Act
+            var result = await controller.GetWithCategoryName("Animal pictures");
+
+            // Assert
+            result.Should().BeNullOrEmpty();
+        }
+        
+        [Fact]
+        public async Task GetWithCategoryName_WithExistingCategories_ReturnsExpectedCategories()
+        {
+            // Arrenge
+            var expectedCategories = new[] {CreateRandomCategory(), CreateRandomCategory()};
+
+            repositoryStub.Setup(repo => repo.GetWithName(It.IsAny<string>()))
+                .ReturnsAsync(expectedCategories);
+
+            var controller = new CategoriesController(repositoryStub.Object);
+
+            // Act
+            var actualCategories = await controller.GetWithCategoryName("TestCategory");
+
+            // Assert
+            actualCategories.Should().BeEquivalentTo(
+                expectedCategories,
+                options => options.ComparingByMembers<Category>());
+        }
 
         private Category CreateRandomCategory()
         {
