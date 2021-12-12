@@ -61,6 +61,17 @@ namespace OnlineStoreProject.Controllers
             return NoContent();
         }
 
+        [HttpPut("increaseView/{id}")]
+        public async Task<IActionResult> IncreaseProductsViews(int id)
+        {
+            var existingProduct = await _productRepository.Get(id);
+            if (existingProduct is null) return NotFound();
+
+            existingProduct.Views += 1;
+            await _productRepository.Update(existingProduct);
+            return NoContent();
+        }
+
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
