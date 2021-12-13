@@ -28,4 +28,16 @@ const getWithCategory = async (category) => {
   return response.data;
 };
 
-export default { getAll, getOne, getNewest, getMostPopular, getWithCategory };
+const increaseViewsByOne = async (id) => {
+  const response = await axios.put(`${URL}increaseview/${id}`);
+  return response.data;
+};
+
+export default {
+  getAll,
+  getOne,
+  getNewest,
+  getMostPopular,
+  getWithCategory,
+  increaseViewsByOne,
+};

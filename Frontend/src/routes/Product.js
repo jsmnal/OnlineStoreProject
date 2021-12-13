@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Image, Container, Row, Col, Button } from 'react-bootstrap';
 
 import productService from '../services/product';
@@ -7,6 +7,7 @@ import config from '../utils/config';
 
 const Product = () => {
   let params = useParams();
+  let navigate = useNavigate();
 
   const [product, setProduct] = useState([]);
 
@@ -18,8 +19,10 @@ const Product = () => {
     try {
       const res = await productService.getOne(id);
       setProduct(res);
+      await productService.increaseViewsByOne(id);
     } catch (err) {
-      alert(err.message);
+      console.log(err.message);
+      navigate('/404');
     }
   };
 
