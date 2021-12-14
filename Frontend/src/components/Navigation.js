@@ -1,4 +1,4 @@
-import { Navbar, Container, Nav } from 'react-bootstrap';
+import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const Navigation = () => {
@@ -12,9 +12,14 @@ const Navigation = () => {
           <Nav.Link as={Link} to="/">
             Home
           </Nav.Link>
-          <Nav.Link as={Link} to="/products">
-            Products
-          </Nav.Link>
+          <NavDropdown title="Categories">
+            <NavDropdown.Item as={Link} to="/products/category=Nature">
+              Nature
+            </NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/products/category=Landscape">
+              Landscape
+            </NavDropdown.Item>
+          </NavDropdown>
         </Nav>
       </Container>
     </Navbar>
