@@ -1,7 +1,25 @@
+/* eslint-disable indent */
+import React, { useState, useEffect } from 'react';
+import categoryService from '../services/category';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const Navigation = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  const getCategories = async () => {
+    try {
+      const res = await categoryService.getAll();
+      setCategories(res);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
   return (
     <Navbar bg="#ffffff" style={{ boxShadow: '0 0 2px 2px #765d3a' }}>
       <Container>
@@ -13,12 +31,17 @@ const Navigation = () => {
             Home
           </Nav.Link>
           <NavDropdown title="Categories">
-            <NavDropdown.Item as={Link} to="/products/category=Nature">
-              Nature
-            </NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/products/category=Landscape">
-              Landscape
-            </NavDropdown.Item>
+            {categories.map((category) => {
+              return (
+                <NavDropdown.Item
+                  key={category.id}
+                  as={Link}
+                  to={`/products/category=${category.name.split(' ')[0]}`}
+                >
+                  {category.name}
+                </NavDropdown.Item>
+              );
+            })}
           </NavDropdown>
         </Nav>
       </Container>
