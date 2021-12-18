@@ -12,6 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using OnlineStoreProject.Extensions;
+using OnlineStoreProject.Settings;
 
 namespace OnlineStoreProject
 {
@@ -28,6 +31,8 @@ namespace OnlineStoreProject
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var jwtSettings = Configuration.GetSection("Jwt").Get<JwtSettings>();
+            
             services.AddDbContext<OnlineStoreContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("LocalSQLServer"))
             );
@@ -57,6 +62,11 @@ namespace OnlineStoreProject
                 options.Password.RequiredLength = 8;
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<OnlineStoreContext>();
+
+            services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
+            services.AddAuth(jwtSettings);
+
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,10 +83,9 @@ namespace OnlineStoreProject
 
             app.UseRouting();
 
-            app.UseAuthentication();
-
             app.UseCors("Development");
 
+            app.UseAuth();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
