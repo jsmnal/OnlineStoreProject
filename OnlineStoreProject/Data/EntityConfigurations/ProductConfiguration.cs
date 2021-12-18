@@ -27,7 +27,7 @@ namespace OnlineStoreProject.Data.EntityConfigurations
                     StockQuantity = 12,
                     Price = 19.99M,
                     CreatedDate = new DateTime(2021, 01, 10, 10, 00, 00),
-                    ImagePath = "",
+                    ImagePath = "dog.jpeg",
                     CategoryId = 1,
                     DiscountId = 1
                 },
@@ -39,7 +39,7 @@ namespace OnlineStoreProject.Data.EntityConfigurations
                     StockQuantity = 25,
                     Price = 12.90M,
                     CreatedDate = new DateTime(2021, 06, 12, 00, 00, 00),
-                    ImagePath = "",
+                    ImagePath = "cat.jpeg",
                     CategoryId = 1,
                     DiscountId = 2
                 },
@@ -51,7 +51,7 @@ namespace OnlineStoreProject.Data.EntityConfigurations
                     StockQuantity = 2,
                     Price = 49.99M,
                     CreatedDate = new DateTime(2021, 12, 01, 09, 30, 00),
-                    ImagePath = "",
+                    ImagePath = "winter-forest.jpg",
                     CategoryId = 2,
                     DiscountId = 1
                 }

@@ -272,8 +272,8 @@ namespace OnlineStoreProject.Migrations
                 columns: new[] { "Id", "Description", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Pictures of different animals", "Animal pictures" },
-                    { 2, "Pictures of beatifull nature", "Nature pictures" }
+                    { 1, "Pictures of different animals", "Animals" },
+                    { 2, "Pictures of beatifull nature", "Nature" }
                 });
 
             migrationBuilder.InsertData(
@@ -288,17 +288,17 @@ namespace OnlineStoreProject.Migrations
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "CategoryId", "CreatedDate", "Description", "DiscountId", "ImagePath", "Name", "Price", "StockQuantity", "Views" },
-                values: new object[] { 1, 1, new DateTime(2021, 1, 10, 10, 0, 0, 0, DateTimeKind.Unspecified), "Picture of a cute dog", 1, "", "Dog Picture", 19.99m, 12, 0 });
+                values: new object[] { 1, 1, new DateTime(2021, 1, 10, 10, 0, 0, 0, DateTimeKind.Unspecified), "Picture of a cute dog", 1, "dog.jpeg", "Dog Picture", 19.99m, 12, 0 });
 
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "CategoryId", "CreatedDate", "Description", "DiscountId", "ImagePath", "Name", "Price", "StockQuantity", "Views" },
-                values: new object[] { 3, 2, new DateTime(2021, 12, 1, 9, 30, 0, 0, DateTimeKind.Unspecified), "Picture of a beautifull winter forest from Lapland", 1, "", "Winter forest", 49.99m, 2, 0 });
+                values: new object[] { 3, 2, new DateTime(2021, 12, 1, 9, 30, 0, 0, DateTimeKind.Unspecified), "Picture of a beautifull winter forest from Lapland", 1, "winter-forest.jpg", "Winter forest", 49.99m, 2, 0 });
 
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "CategoryId", "CreatedDate", "Description", "DiscountId", "ImagePath", "Name", "Price", "StockQuantity", "Views" },
-                values: new object[] { 2, 1, new DateTime(2021, 6, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Picture of a not so cute cat", 2, "", "Cat Picture", 12.90m, 25, 0 });
+                values: new object[] { 2, 1, new DateTime(2021, 6, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Picture of a not so cute cat", 2, "cat.jpeg", "Cat Picture", 12.90m, 25, 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
