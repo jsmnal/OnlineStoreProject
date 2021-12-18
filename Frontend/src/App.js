@@ -7,6 +7,7 @@ import Product from './routes/Product';
 import NotFound from './routes/404/NotFound';
 import Category from './routes/Category';
 import NotFoundProduct from './routes/404/NotFoundProduct';
+import ShoppingCart from './routes/ShoppingCart';
 
 function App() {
   return (
@@ -19,7 +20,12 @@ function App() {
         <Route exact path="/404" element={<NotFoundProduct />} />
         <Route exact path="/products" element={<Home />} />
         <Route exact path="/products/:id" element={<Product />} />
-        <Route exact path="/products/category=:category" element={<Category />} />
+        <Route
+          exact
+          path="/products/category=:category"
+          element={<Category />}
+        />
+        <Route exact path="/cart" element={<ShoppingCart />} />
       </Routes>
     </Router>
   );
