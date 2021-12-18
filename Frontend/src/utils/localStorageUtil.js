@@ -8,6 +8,7 @@ const addItemToCart = (item) => {
     cart.push(item);
     window.localStorage.setItem('cart', JSON.stringify(cart));
   } else {
+    item.localStorageUuid = uuidv4();
     window.localStorage.setItem('cart', JSON.stringify([item]));
   }
 };
@@ -18,13 +19,12 @@ const getItemsFromCart = () => {
 };
 
 const removeItemFromCart = (id) => {
-  console.log(id);
   const isCart = window.localStorage.getItem('cart');
   if (isCart) {
     const cart = JSON.parse(isCart);
     console.log(cart);
-    const filteredCart = cart.filter((el) => {
-      return el.localStorageUuid !== id;
+    const filteredCart = cart.filter((product) => {
+      return product.localStorageUuid !== id;
     });
     window.localStorage.setItem('cart', JSON.stringify(filteredCart));
   }
