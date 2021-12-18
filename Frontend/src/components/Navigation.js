@@ -3,12 +3,15 @@ import React, { useState, useEffect } from 'react';
 import categoryService from '../services/category';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import localStorage from '../utils/localStorageUtil';
 
 const Navigation = () => {
   const [categories, setCategories] = useState([]);
+  const [cartItemAmount, setCartItemAmount] = useState(0);
 
   useEffect(() => {
     getCategories();
+    getCartItemsAmount();
   }, []);
 
   const getCategories = async () => {
@@ -18,6 +21,11 @@ const Navigation = () => {
     } catch (err) {
       console.log(err.message);
     }
+  };
+
+  const getCartItemsAmount = () => {
+    const cart = localStorage.getItemsFromCart();
+    setCartItemAmount(cart?.length ?? 0);
   };
 
   return (
@@ -43,6 +51,9 @@ const Navigation = () => {
               );
             })}
           </NavDropdown>
+          <Nav.Link as={Link} to="/cart">
+            Cart ({cartItemAmount})
+          </Nav.Link>
         </Nav>
       </Container>
     </Navbar>
