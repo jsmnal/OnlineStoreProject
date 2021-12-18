@@ -18,7 +18,7 @@ const NewestImagesCardRow = () => {
       setProducts(res);
       setLoading(true);
     } catch (err) {
-      alert(err.message);
+      console.log(err.message);
     }
   };
   return (
