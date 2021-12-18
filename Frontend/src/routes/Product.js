@@ -4,6 +4,7 @@ import { Image, Container, Row, Col, Button } from 'react-bootstrap';
 
 import productService from '../services/product';
 import config from '../utils/config';
+import localStorage from '../utils/localStorageUtil';
 
 const Product = () => {
   let params = useParams();
@@ -24,6 +25,10 @@ const Product = () => {
       console.log(err.message);
       navigate('/404');
     }
+  };
+
+  const handleClick = (item) => {
+    localStorage.addItemToCart(item);
   };
 
   return (
@@ -54,7 +59,9 @@ const Product = () => {
           </Row>
           <Row>
             <Col className="mt-3">
-              <Button variant="primary">Buy now!</Button>
+              <Button variant="primary" onClick={() => handleClick(product)}>
+                Buy now!
+              </Button>
             </Col>
           </Row>
         </Col>
