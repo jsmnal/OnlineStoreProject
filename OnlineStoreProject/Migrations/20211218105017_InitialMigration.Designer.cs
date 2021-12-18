@@ -10,7 +10,7 @@ using OnlineStoreProject.Data;
 namespace OnlineStoreProject.Migrations
 {
     [DbContext(typeof(OnlineStoreContext))]
-    [Migration("20211205104835_InitialMigration")]
+    [Migration("20211218105017_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -176,13 +176,13 @@ namespace OnlineStoreProject.Migrations
                         {
                             Id = 1,
                             Description = "Pictures of different animals",
-                            Name = "Animal pictures"
+                            Name = "Animals"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Pictures of beatifull nature",
-                            Name = "Nature pictures"
+                            Name = "Nature"
                         });
                 });
 
@@ -359,7 +359,7 @@ namespace OnlineStoreProject.Migrations
                             CreatedDate = new DateTime(2021, 1, 10, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Picture of a cute dog",
                             DiscountId = 1,
-                            ImagePath = "",
+                            ImagePath = "dog.jpeg",
                             Name = "Dog Picture",
                             Price = 19.99m,
                             StockQuantity = 12,
@@ -372,7 +372,7 @@ namespace OnlineStoreProject.Migrations
                             CreatedDate = new DateTime(2021, 6, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Picture of a not so cute cat",
                             DiscountId = 2,
-                            ImagePath = "",
+                            ImagePath = "cat.jpeg",
                             Name = "Cat Picture",
                             Price = 12.90m,
                             StockQuantity = 25,
@@ -385,7 +385,7 @@ namespace OnlineStoreProject.Migrations
                             CreatedDate = new DateTime(2021, 12, 1, 9, 30, 0, 0, DateTimeKind.Unspecified),
                             Description = "Picture of a beautifull winter forest from Lapland",
                             DiscountId = 1,
-                            ImagePath = "",
+                            ImagePath = "winter-forest.jpg",
                             Name = "Winter forest",
                             Price = 49.99m,
                             StockQuantity = 2,

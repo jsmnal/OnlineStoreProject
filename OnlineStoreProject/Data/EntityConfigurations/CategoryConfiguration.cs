@@ -20,13 +20,13 @@ namespace OnlineStoreProject.Data.EntityConfigurations
                 new Category
                 {
                     Id = 1,
-                    Name = "Animal pictures",
+                    Name = "Animals",
                     Description = "Pictures of different animals"
                 },
                 new Category
                 {
                     Id = 2,
-                    Name = "Nature pictures",
+                    Name = "Nature",
                     Description = "Pictures of beatifull nature"
                 }
             );
