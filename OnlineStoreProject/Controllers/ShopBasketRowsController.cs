@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using OnlineStoreProject.Data;
 using OnlineStoreProject.Data.DAL;
 using OnlineStoreProject.Models;
 
@@ -16,10 +12,16 @@ namespace OnlineStoreProject.Controllers
     public class ShopBasketRowsController : ControllerBase
     {
         private readonly IRepository<ShopBasketRow> _repository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ShopBasketRowsController(IRepository<ShopBasketRow> repository)
+        private ISession _currentSession => _httpContextAccessor.HttpContext.Session;
+
+        public ShopBasketRowsController(IRepository<ShopBasketRow> repository, IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
+
+            _httpContextAccessor = httpContextAccessor;
+
         }
 
         // GET: api/ShopBasketRows
@@ -63,6 +65,9 @@ namespace OnlineStoreProject.Controllers
         [HttpPost]
         public async Task<ActionResult<ShopBasketRow>> PostShopBasketRow(ShopBasketRow shopBasketRow)
         {
+            //shopBasketRow.ShopBasketId = int.Parse(Request.Cookies["Cookie"].ToString());
+            await _currentSession.LoadAsync();
+            shopBasketRow.ShopBasketId = int.Parse(_currentSession.GetString("Cart"));
             await _repository.Add(shopBasketRow);
             return CreatedAtAction("GetShopBasketRow", new { id = shopBasketRow.Id }, shopBasketRow);
         }
@@ -80,6 +85,7 @@ namespace OnlineStoreProject.Controllers
             await _repository.Delete(id);
             return NoContent();
         }
+
 
     }
 }

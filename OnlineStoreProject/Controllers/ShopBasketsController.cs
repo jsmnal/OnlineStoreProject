@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using OnlineStoreProject.Data;
 using OnlineStoreProject.Data.DAL;
 using OnlineStoreProject.Models;
 
@@ -16,11 +12,16 @@ namespace OnlineStoreProject.Controllers
     public class ShopBasketsController : ControllerBase
     {
         private readonly IRepository<ShopBasket> _repository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private ISession _currentSession => _httpContextAccessor.HttpContext.Session;
 
-        public ShopBasketsController(IRepository<ShopBasket> repository)
+        public ShopBasketsController(IRepository<ShopBasket> repository, IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
-        }
+            _httpContextAccessor = httpContextAccessor;
+
+    }
+
 
         // GET: api/ShopBaskets
         [HttpGet]
@@ -64,6 +65,9 @@ namespace OnlineStoreProject.Controllers
         public async Task<ActionResult<ShopBasket>> PostShopBasket(ShopBasket shopBasket)
         {
             await _repository.Add(shopBasket);
+            //Response.Cookies.Append("Cookie", shopBasket.Id.ToString());
+            await _currentSession.CommitAsync();
+            _currentSession.SetString("Cart", shopBasket.Id.ToString());
             return CreatedAtAction("GetShopBasket", new { id = shopBasket.Id }, shopBasket);
         }
 
