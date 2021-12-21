@@ -66,8 +66,8 @@ namespace OnlineStoreProject.Controllers
         {
             await _repository.Add(shopBasket);
             //Response.Cookies.Append("Cookie", shopBasket.Id.ToString());
-            await _currentSession.CommitAsync();
             _currentSession.SetString("Cart", shopBasket.Id.ToString());
+            await _currentSession.CommitAsync();
             return CreatedAtAction("GetShopBasket", new { id = shopBasket.Id }, shopBasket);
         }
 
