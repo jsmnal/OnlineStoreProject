@@ -65,9 +65,10 @@ namespace OnlineStoreProject.Controllers
         public async Task<ActionResult<ShopBasket>> PostShopBasket(ShopBasket shopBasket)
         {
             await _repository.Add(shopBasket);
+            await _currentSession.CommitAsync();
             //Response.Cookies.Append("Cookie", shopBasket.Id.ToString());
             _currentSession.SetString("Cart", shopBasket.Id.ToString());
-            await _currentSession.CommitAsync();
+            
             return CreatedAtAction("GetShopBasket", new { id = shopBasket.Id }, shopBasket);
         }
 
