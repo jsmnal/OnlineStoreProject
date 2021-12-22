@@ -42,7 +42,7 @@ namespace OnlineStoreProject
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.IdleTimeout = TimeSpan.FromHours(2);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
                 options.Cookie.Name = "Cart";
@@ -59,7 +59,7 @@ namespace OnlineStoreProject
             services.AddScoped<IRepository<ShopBasket>, ShopBasketRepository>();
             services.AddScoped<IProductRepository,ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-            //services.AddScoped<IShopBasketRowRepository, ShopBasketRowRepository>();
+            services.AddScoped<IShopBasketRowRepository, ShopBasketRowRepository>();
             services.AddHttpContextAccessor();
 
             // TODO: Check options to use in Identity: 

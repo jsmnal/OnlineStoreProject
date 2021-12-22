@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStoreProject.Data.DAL;
+using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
 
 namespace OnlineStoreProject.Controllers
@@ -11,12 +12,12 @@ namespace OnlineStoreProject.Controllers
     [ApiController]
     public class ShopBasketRowsController : ControllerBase
     {
-        private readonly IRepository<ShopBasketRow> _repository;
+        private readonly IShopBasketRowRepository _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         private ISession _currentSession => _httpContextAccessor.HttpContext.Session;
 
-        public ShopBasketRowsController(IRepository<ShopBasketRow> repository, IHttpContextAccessor httpContextAccessor)
+        public ShopBasketRowsController(IShopBasketRowRepository repository, IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
 
@@ -68,8 +69,20 @@ namespace OnlineStoreProject.Controllers
             //shopBasketRow.ShopBasketId = int.Parse(Request.Cookies["Cookie"].ToString());
             await _currentSession.LoadAsync();
             shopBasketRow.ShopBasketId = int.Parse(_currentSession.GetString("Cart"));
-            await _repository.Add(shopBasketRow);
-            return CreatedAtAction("GetShopBasketRow", new { id = shopBasketRow.Id }, shopBasketRow);
+            if (_repository.ProductExists(shopBasketRow.ProductId, shopBasketRow.ShopBasketId) == true)
+            {
+                var existingShopBasketRow = await _repository.Get(_repository.ExistingRowId(shopBasketRow.ProductId, shopBasketRow.ShopBasketId));
+                existingShopBasketRow.Quantity += 1;
+                await _repository.Update(existingShopBasketRow);
+                return NoContent();
+
+            }
+            else
+            {
+                shopBasketRow.Quantity = 1;
+                await _repository.Add(shopBasketRow);
+                return CreatedAtAction("GetShopBasketRow", new { id = shopBasketRow.Id }, shopBasketRow);
+            }
         }
 
         // DELETE: api/ShopBasketRows/5
