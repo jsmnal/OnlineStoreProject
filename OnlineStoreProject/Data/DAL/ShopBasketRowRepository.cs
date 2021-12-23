@@ -15,9 +15,9 @@ namespace OnlineStoreProject.Data.DAL
             _context = context;
         }
 
-        public bool ProductExists(int product, int id)
+        public bool ProductExists(int productId, int shopBasketId)
         {
-            if (_context.ShopBasketRows.Where(p => p.ProductId == product & p.ShopBasketId == id).Count() > 0)
+            if (_context.ShopBasketRows.Where(p => p.ProductId == productId & p.ShopBasketId == shopBasketId).Count() > 0)
             {
                 return true;
             } else
@@ -26,10 +26,10 @@ namespace OnlineStoreProject.Data.DAL
             }
         }
 
-        public int ExistingRowId(int product, int id)
+        public int GetSBRowId(int productId, int shopBasketId)
         {
             
-            return _context.ShopBasketRows.Where(p => p.ProductId == product & p.ShopBasketId == id).FirstOrDefault().Id;
+            return _context.ShopBasketRows.Where(p => p.ProductId == productId & p.ShopBasketId == shopBasketId).FirstOrDefault().Id;
         }
 
     }
