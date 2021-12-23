@@ -64,6 +64,7 @@ namespace OnlineStoreProject.Controllers
         [HttpPost]
         public async Task<ActionResult<ShopBasket>> PostShopBasket(ShopBasket shopBasket)
         {
+            shopBasket.SentOrder = false;
             await _repository.Add(shopBasket);
             //Response.Cookies.Append("Cookie", shopBasket.Id.ToString());
             _currentSession.SetString("Cart", shopBasket.Id.ToString());
