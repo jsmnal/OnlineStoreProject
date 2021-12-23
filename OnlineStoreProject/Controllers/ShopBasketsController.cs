@@ -65,11 +65,17 @@ namespace OnlineStoreProject.Controllers
         public async Task<ActionResult<ShopBasket>> PostShopBasket(ShopBasket shopBasket)
         {
             shopBasket.SentOrder = false;
-            await _repository.Add(shopBasket);
-            //Response.Cookies.Append("Cookie", shopBasket.Id.ToString());
-            _currentSession.SetString("Cart", shopBasket.Id.ToString());
-            await _currentSession.CommitAsync();
-            return CreatedAtAction("GetShopBasket", new { id = shopBasket.Id }, shopBasket);
+            if (_currentSession.GetString("Cart") is null)
+            {
+                await _repository.Add(shopBasket);
+                //Response.Cookies.Append("Cookie", shopBasket.Id.ToString());
+                _currentSession.SetString("Cart", shopBasket.Id.ToString());
+                return CreatedAtAction("GetShopBasket", new { id = shopBasket.Id }, shopBasket);
+            }
+            else
+            {
+                return NoContent();
+            }
         }
 
         // DELETE: api/ShopBaskets/5

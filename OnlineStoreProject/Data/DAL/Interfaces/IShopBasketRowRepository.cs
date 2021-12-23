@@ -10,6 +10,7 @@ namespace OnlineStoreProject.Data.DAL.Interfaces
     {
         bool ProductExists(int productId, int shopBasketId);
         int GetSBRowId(int productId, int shopBasketId);
+        Task<IEnumerable<ShopBasketRow>> GetWithShopBasketId(int shopBasketId);
 
     }
 }
