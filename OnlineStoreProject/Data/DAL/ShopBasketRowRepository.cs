@@ -1,4 +1,5 @@
-﻿using OnlineStoreProject.Data.DAL.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace OnlineStoreProject.Data.DAL
 
         public bool ProductExists(int productId, int shopBasketId)
         {
-            if (_context.ShopBasketRows.Where(p => p.ProductId == productId & p.ShopBasketId == shopBasketId).Count() > 0)
+            if (_context.ShopBasketRows.Where(s => s.ProductId == productId & s.ShopBasketId == shopBasketId).Count() > 0)
             {
                 return true;
             } else
@@ -29,8 +30,12 @@ namespace OnlineStoreProject.Data.DAL
         public int GetSBRowId(int productId, int shopBasketId)
         {
             
-            return _context.ShopBasketRows.Where(p => p.ProductId == productId & p.ShopBasketId == shopBasketId).FirstOrDefault().Id;
+            return _context.ShopBasketRows.Where(s => s.ProductId == productId & s.ShopBasketId == shopBasketId).FirstOrDefault().Id;
         }
 
+        public async Task<IEnumerable<ShopBasketRow>> GetWithShopBasketId(int shopBasketId)
+        {
+            return await _context.ShopBasketRows.Where(s => s.ShopBasketId == shopBasketId).ToArrayAsync();
+        }
     }
 }
