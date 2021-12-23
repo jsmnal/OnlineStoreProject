@@ -12,14 +12,14 @@ namespace OnlineStoreProject.Controllers
     [ApiController]
     public class ShopBasketRowsController : ControllerBase
     {
-        private readonly IShopBasketRowRepository _repository;
+        private readonly IShopBasketRowRepository _sbRowRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         private ISession _currentSession => _httpContextAccessor.HttpContext.Session;
 
         public ShopBasketRowsController(IShopBasketRowRepository repository, IHttpContextAccessor httpContextAccessor)
         {
-            _repository = repository;
+            _sbRowRepository = repository;
 
             _httpContextAccessor = httpContextAccessor;
 
@@ -29,14 +29,14 @@ namespace OnlineStoreProject.Controllers
         [HttpGet]
         public async Task<IEnumerable<ShopBasketRow>> GetShopBasketRows()
         {
-            return await _repository.GetAll();
+            return await _sbRowRepository.GetAll();
         }
 
         // GET: api/ShopBasketRows/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ShopBasketRow>> GetShopBasketRow(int id)
         {
-            var shopBasketRow = await _repository.Get(id);
+            var shopBasketRow = await _sbRowRepository.Get(id);
 
             if (shopBasketRow is null)
             {
@@ -51,13 +51,13 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShopBasketRow(int id, ShopBasketRow shopBasketRow)
         {
-            var existingShopBasketRow = await _repository.Get(id);
+            var existingShopBasketRow = await _sbRowRepository.Get(id);
             if (existingShopBasketRow is null)
             {
                 return NotFound();
             }
 
-            await _repository.Update(shopBasketRow);
+            await _sbRowRepository.Update(shopBasketRow);
             return NoContent();
         }
 
@@ -67,20 +67,24 @@ namespace OnlineStoreProject.Controllers
         public async Task<ActionResult<ShopBasketRow>> PostShopBasketRow(ShopBasketRow shopBasketRow)
         {
             //shopBasketRow.ShopBasketId = int.Parse(Request.Cookies["Cookie"].ToString());
-            await _currentSession.LoadAsync();
+            await _currentSession.LoadAsync(); 
             shopBasketRow.ShopBasketId = int.Parse(_currentSession.GetString("Cart"));
-            if (_repository.ProductExists(shopBasketRow.ProductId, shopBasketRow.ShopBasketId) == true)
+            
+            int productId = shopBasketRow.ProductId;
+            int shopBasketId = shopBasketRow.ShopBasketId;
+            if (_sbRowRepository.ProductExists(productId, shopBasketId) is true)
             {
-                var existingShopBasketRow = await _repository.Get(_repository.ExistingRowId(shopBasketRow.ProductId, shopBasketRow.ShopBasketId));
+                var shopBasketRowId = _sbRowRepository.GetSBRowId(productId, shopBasketId);
+                var existingShopBasketRow = await _sbRowRepository.Get(shopBasketRowId);
                 existingShopBasketRow.Quantity += 1;
-                await _repository.Update(existingShopBasketRow);
+                await _sbRowRepository.Update(existingShopBasketRow);
                 return NoContent();
 
             }
             else
             {
                 shopBasketRow.Quantity = 1;
-                await _repository.Add(shopBasketRow);
+                await _sbRowRepository.Add(shopBasketRow);
                 return CreatedAtAction("GetShopBasketRow", new { id = shopBasketRow.Id }, shopBasketRow);
             }
         }
@@ -89,13 +93,13 @@ namespace OnlineStoreProject.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteShopBasketRow(int id)
         {
-            var existingShopBasketRow = await _repository.Get(id);
+            var existingShopBasketRow = await _sbRowRepository.Get(id);
             if (existingShopBasketRow is null)
             {
                 return NotFound();
             }
 
-            await _repository.Delete(id);
+            await _sbRowRepository.Delete(id);
             return NoContent();
         }
 

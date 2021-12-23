@@ -8,7 +8,8 @@ namespace OnlineStoreProject.Data.DAL.Interfaces
 {
     public interface IShopBasketRowRepository : IRepository<ShopBasketRow>
     {
-        bool ProductExists(int product, int id);
-        int ExistingRowId(int product, int id);
+        bool ProductExists(int productId, int shopBasketId);
+        int GetSBRowId(int productId, int shopBasketId);
+
     }
 }
