@@ -1,20 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OnlineStoreProject.Data;
 using OnlineStoreProject.Data.DAL;
+using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using OnlineStoreProject.Extensions;
-using OnlineStoreProject.Settings;
 
 namespace OnlineStoreProject
 {
@@ -31,7 +25,7 @@ namespace OnlineStoreProject
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var jwtSettings = Configuration.GetSection("Jwt").Get<JwtSettings>();
+            //var jwtSettings = Configuration.GetSection("Jwt").Get<JwtSettings>();
             
             services.AddDbContext<OnlineStoreContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("LocalSQLServer"))
@@ -45,6 +39,18 @@ namespace OnlineStoreProject
 
             });
 
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(2);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                options.Cookie.Name = "Cart";
+
+            }
+            );
+
+
             services.AddScoped<UnitOfWork>();          
             services.AddScoped<IRepository<Category>, CategoryRepository>();
             services.AddScoped<IRepository<Discount>, DiscountRepository>();
@@ -53,6 +59,8 @@ namespace OnlineStoreProject
             services.AddScoped<IRepository<ShopBasket>, ShopBasketRepository>();
             services.AddScoped<IProductRepository,ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IShopBasketRowRepository, ShopBasketRowRepository>();
+            services.AddHttpContextAccessor();
 
             // TODO: Check options to use in Identity: 
             // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity-configuration?view=aspnetcore-5.0#identity-options
@@ -63,10 +71,10 @@ namespace OnlineStoreProject
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<OnlineStoreContext>();
 
-            services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
+/*            services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
             services.AddAuth(jwtSettings);
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Startup));*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,7 +93,9 @@ namespace OnlineStoreProject
 
             app.UseCors("Development");
 
-            app.UseAuth();
+            app.UseSession();
+
+            //app.UseAuth();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
