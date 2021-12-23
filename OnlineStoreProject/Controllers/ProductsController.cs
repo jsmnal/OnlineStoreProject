@@ -83,6 +83,17 @@ namespace OnlineStoreProject.Controllers
             return NoContent();
         }
 
+        [HttpPut("increaseStockQuantity/{id}")]
+        public async Task<IActionResult> IncreaseStockQuantity(int id)
+        {
+            var existingProduct = await _productRepository.Get(id);
+            if (existingProduct is null) return NotFound();
+
+            existingProduct.StockQuantity += 1;
+            await _productRepository.Update(existingProduct);
+            return NoContent();
+        }
+
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
