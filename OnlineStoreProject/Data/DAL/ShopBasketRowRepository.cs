@@ -32,6 +32,11 @@ namespace OnlineStoreProject.Data.DAL
             return await _context.ShopBasketRows.Where(s => s.ShopBasketId == shopBasketId).ToArrayAsync();
         }
 
+        public decimal GetShopBasketTotal(int shopBasketId)
+        {
+            return _context.ShopBasketRows.Where(s => s.ShopBasketId == shopBasketId).Sum(s => s.Product.Price);
+        }
+
         public async Task<ShopBasketRow> UpdateShopBasketRow(int id, ShopBasketRow shopBasketRow)
         {
             var existingShopBasketRow = await _context.ShopBasketRows.FindAsync(id);
