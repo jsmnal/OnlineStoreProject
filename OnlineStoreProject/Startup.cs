@@ -9,6 +9,7 @@ using OnlineStoreProject.Data.DAL;
 using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace OnlineStoreProject
 {
@@ -28,15 +29,14 @@ namespace OnlineStoreProject
             //var jwtSettings = Configuration.GetSection("Jwt").Get<JwtSettings>();
             
             services.AddDbContext<OnlineStoreContext>(options => 
-                options.UseSqlServer(Configuration.GetConnectionString("LocalSQLServer"))
+                options.UseSqlServer(Configuration.GetConnectionString("LocalDockerServer"))
             );
             services.AddControllers();
 
             services.AddCors(options =>
             {
                 options.AddPolicy("Development",
-                    builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-
+                    builder => builder.WithOrigins("https://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             });
 
             services.AddDistributedMemoryCache();
@@ -46,7 +46,8 @@ namespace OnlineStoreProject
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
                 options.Cookie.Name = "Cart";
-
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             }
             );
 
