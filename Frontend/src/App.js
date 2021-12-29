@@ -1,4 +1,6 @@
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import shopBasketsService from './services/shopBaskets';
 
 import TitleHeader from './components/TitleHeader';
 import Navigation from './components/Navigation';
@@ -10,6 +12,15 @@ import NotFoundProduct from './routes/404/NotFoundProduct';
 import ShoppingCart from './routes/ShoppingCart';
 
 function App() {
+  useEffect(() => {
+    createEmptyShopBasket();
+  }, []);
+
+  const createEmptyShopBasket = async () => {
+    const response = await shopBasketsService.createShopBasket({ total: 0 });
+    console.log(response);
+  };
+
   return (
     <Router>
       <TitleHeader />
