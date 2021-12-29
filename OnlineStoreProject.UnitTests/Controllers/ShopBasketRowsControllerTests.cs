@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using OnlineStoreProject.Controllers;
 using OnlineStoreProject.Data.DAL;
+using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,8 @@ namespace OnlineStoreProject.UnitTests.Controllers
 {
     public class ShopBasketRowsControllerTests
     {
-        private readonly Mock<IRepository<ShopBasketRow>> repositoryStub = new Mock<IRepository<ShopBasketRow>>();
+        private readonly Mock<IShopBasketRowRepository> repositoryStub = new Mock<IShopBasketRowRepository>();
+        private readonly Mock<IHttpContextAccessor> httpContextAccessorStub = new Mock<IHttpContextAccessor>();
         private readonly Random rand = new();
 
         [Fact]
@@ -23,7 +26,7 @@ namespace OnlineStoreProject.UnitTests.Controllers
         {
             repositoryStub.Setup(repo => repo.Get(It.IsAny<int>())).ReturnsAsync((ShopBasketRow)null);
 
-            var controller = new ShopBasketRowsController(repositoryStub.Object);
+            var controller = new ShopBasketRowsController(repositoryStub.Object, httpContextAccessorStub.Object);
 
             var result = await controller.GetShopBasketRow(4);
 
@@ -36,7 +39,7 @@ namespace OnlineStoreProject.UnitTests.Controllers
         {
             var expectedShopBasketRow = CreateRandomShopBasketRow();
             repositoryStub.Setup(repo => repo.Get(It.IsAny<int>())).ReturnsAsync(expectedShopBasketRow);
-            var controller = new ShopBasketRowsController(repositoryStub.Object);
+            var controller = new ShopBasketRowsController(repositoryStub.Object, httpContextAccessorStub.Object);
 
             var result = await controller.GetShopBasketRow(3);
 
@@ -58,7 +61,7 @@ namespace OnlineStoreProject.UnitTests.Controllers
 
             repositoryStub.Setup(repo => repo.GetAll()).ReturnsAsync(expectedShopBasketRows);
 
-            var controller = new ShopBasketRowsController(repositoryStub.Object);
+            var controller = new ShopBasketRowsController(repositoryStub.Object, httpContextAccessorStub.Object);
 
             var shopBasketRows = await controller.GetShopBasketRows();
 
@@ -72,7 +75,7 @@ namespace OnlineStoreProject.UnitTests.Controllers
         {
             var shopBasketRowToCreate = CreateRandomShopBasketRow();
 
-            var controller = new ShopBasketRowsController(repositoryStub.Object);
+            var controller = new ShopBasketRowsController(repositoryStub.Object, httpContextAccessorStub.Object);
 
             var result = await controller.PostShopBasketRow(shopBasketRowToCreate);
 
@@ -96,7 +99,7 @@ namespace OnlineStoreProject.UnitTests.Controllers
                 Quantity = 99,
                 ProductId = 46,
             };
-            var controller = new ShopBasketRowsController(repositoryStub.Object);
+            var controller = new ShopBasketRowsController(repositoryStub.Object, httpContextAccessorStub.Object);
 
             var result = await controller.PutShopBasketRow(shopBasketRowId, shopBasketRowToUpdate);
 
@@ -116,7 +119,7 @@ namespace OnlineStoreProject.UnitTests.Controllers
                 Quantity = 99,
                 ProductId = 46,
             };
-            var controller = new ShopBasketRowsController(repositoryStub.Object);
+            var controller = new ShopBasketRowsController(repositoryStub.Object, httpContextAccessorStub.Object);
 
             var result = await controller.PutShopBasketRow(shopBasketRowId, shopBasketRowToUpdate);
 
@@ -128,7 +131,7 @@ namespace OnlineStoreProject.UnitTests.Controllers
         {
             ShopBasketRow existingShopBasketRow = CreateRandomShopBasketRow();
             repositoryStub.Setup(repo => repo.Get(It.IsAny<int>())).ReturnsAsync(existingShopBasketRow);
-            var controller = new ShopBasketRowsController(repositoryStub.Object);
+            var controller = new ShopBasketRowsController(repositoryStub.Object, httpContextAccessorStub.Object);
 
             var result = await controller.DeleteShopBasketRow(existingShopBasketRow.Id);
 
@@ -141,7 +144,7 @@ namespace OnlineStoreProject.UnitTests.Controllers
         {
             ShopBasketRow existingShopBasketRow = CreateRandomShopBasketRow();
             repositoryStub.Setup(repo => repo.Get(It.IsAny<int>())).ReturnsAsync((ShopBasketRow)null);
-            var controller = new ShopBasketRowsController(repositoryStub.Object);
+            var controller = new ShopBasketRowsController(repositoryStub.Object, httpContextAccessorStub.Object);
 
             var result = await controller.DeleteShopBasketRow(existingShopBasketRow.Id);
 

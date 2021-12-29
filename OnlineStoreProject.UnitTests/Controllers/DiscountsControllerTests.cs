@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using OnlineStoreProject.Controllers;
 using OnlineStoreProject.Data.DAL;
+using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace OnlineStoreProject.UnitTests.Controllers
 {
     public class DiscountsControllerTests
     {
-        private readonly Mock<IRepository<Discount>> repositoryStub = new Mock<IRepository<Discount>>();
+        private readonly Mock<IDiscountRepository> repositoryStub = new Mock<IDiscountRepository>();
         private readonly Random rand = new();
 
         [Fact]
