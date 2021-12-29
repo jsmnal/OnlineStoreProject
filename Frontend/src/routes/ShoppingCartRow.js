@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import shopBasketRowsService from '../services/shopBasketRows';
+import productService from '../services/product';
 
 const ShoppingCartRow = ({
   id,
@@ -12,10 +13,10 @@ const ShoppingCartRow = ({
   discount,
   setUpdate,
 }) => {
-  const handleRemove = async (id) => {
-    console.log(basketRowId);
+  const handleRemove = async (basketId, productId) => {
     try {
-      shopBasketRowsService.deleteBasketRow(id);
+      shopBasketRowsService.deleteBasketRow(basketId);
+      productService.increaseStockQuantity(productId);
       setUpdate(Date.now);
     } catch (error) {
       console.log(error);
@@ -31,7 +32,7 @@ const ShoppingCartRow = ({
           {name} | {price} {discount ? `| DISCOUNT: ${discount}%` : ''}
         </Card.Title>
         <Card.Text>{description}</Card.Text>
-        <Button onClick={() => handleRemove(basketRowId)} variant="danger">
+        <Button onClick={() => handleRemove(basketRowId, id)} variant="danger">
           Remove
         </Button>
       </Card.Body>

@@ -38,6 +38,13 @@ const decreaseStockQuantity = async (id) => {
   return response.data;
 };
 
+const increaseStockQuantity = async (id) => {
+  const response = await axios.put(`${URL}increaseStockQuantity/${id}`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
 export default {
   getAll,
   getOne,
@@ -46,4 +53,5 @@ export default {
   getWithCategory,
   increaseViewsByOne,
   decreaseStockQuantity,
+  increaseStockQuantity,
 };
