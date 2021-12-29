@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import productService from '../services/product';
-import localStorage from '../utils/localStorageUtil';
+import shopBasketRowsService from '../services/shopBasketRows';
 import ShoppingCartRow from './ShoppingCartRow';
 
 const ShoppingCart = () => {
@@ -10,21 +10,26 @@ const ShoppingCart = () => {
   const [update, setUpdate] = useState('');
 
   useEffect(() => {
-    getProducts();
+    getCurrentShoppingCart();
   }, [update]);
 
-  const getProducts = async () => {
-    const productsFromLocalStorage = localStorage.getItemsFromCart();
-    console.log(productsFromLocalStorage);
-    let productArray = [];
-
-    if (productsFromLocalStorage) {
-      for (let i = 0; i < productsFromLocalStorage.length; i++) {
-        let res = await productService.getOne(productsFromLocalStorage[i].id);
-        res.localStorageUuid = productsFromLocalStorage[i].localStorageUuid;
-        productArray.push(res);
+  const getCurrentShoppingCart = async () => {
+    try {
+      const response = await shopBasketRowsService.getCurrentShopBasket();
+      console.log(response);
+      const prodArr = [];
+      for (let i = 0; i < response.length; i++) {
+        let res = await productService.getOne(response[i].productId);
+        let formatProduct = {
+          ...res,
+          quantity: response[i].quantity,
+          basketRowId: response[i].id,
+        };
+        prodArr.push(formatProduct);
       }
-      setProducts(productArray);
+      setProducts(prodArr);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -39,6 +44,7 @@ const ShoppingCart = () => {
                 <ShoppingCartRow
                   key={indx}
                   id={p.id}
+                  basketRowId={p.basketRowId}
                   name={p.name}
                   price={p.price}
                   category={p.category.name}
@@ -48,7 +54,6 @@ const ShoppingCart = () => {
                       ? p.discount.discountPercentage
                       : null
                   }
-                  localStorageId={p.localStorageUuid}
                   setUpdate={setUpdate}
                 />
               );
