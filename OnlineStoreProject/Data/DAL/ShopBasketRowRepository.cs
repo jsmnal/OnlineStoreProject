@@ -18,13 +18,7 @@ namespace OnlineStoreProject.Data.DAL
 
         public bool ProductExists(int productId, int shopBasketId)
         {
-            if (_context.ShopBasketRows.Where(s => s.ProductId == productId & s.ShopBasketId == shopBasketId).Count() > 0)
-            {
-                return true;
-            } else
-            {
-                return false;
-            }
+            return _context.ShopBasketRows.Where(s => s.ProductId == productId & s.ShopBasketId == shopBasketId).Any() ? true : false;
         }
 
         public int GetSBRowId(int productId, int shopBasketId)
@@ -36,6 +30,20 @@ namespace OnlineStoreProject.Data.DAL
         public async Task<IEnumerable<ShopBasketRow>> GetWithShopBasketId(int shopBasketId)
         {
             return await _context.ShopBasketRows.Where(s => s.ShopBasketId == shopBasketId).ToArrayAsync();
+        }
+
+        public async Task<ShopBasketRow> UpdateShopBasketRow(int id, ShopBasketRow shopBasketRow)
+        {
+            var existingShopBasketRow = await _context.ShopBasketRows.FindAsync(id);
+            if(existingShopBasketRow is not null)
+            {
+                existingShopBasketRow.Quantity = shopBasketRow.Quantity;
+                existingShopBasketRow.ProductId = shopBasketRow.ProductId;
+                existingShopBasketRow.ShopBasketId = shopBasketRow.ShopBasketId;
+            }
+            _context.Entry(existingShopBasketRow).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return existingShopBasketRow;
         }
     }
 }
