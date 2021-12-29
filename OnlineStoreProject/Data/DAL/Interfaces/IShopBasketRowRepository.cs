@@ -12,6 +12,7 @@ namespace OnlineStoreProject.Data.DAL.Interfaces
         int GetSBRowId(int productId, int shopBasketId);
         Task<IEnumerable<ShopBasketRow>> GetWithShopBasketId(int shopBasketId);
         Task<ShopBasketRow> UpdateShopBasketRow(int id, ShopBasketRow shopBasketRow);
+        decimal GetShopBasketTotal(int id);
 
     }
 }

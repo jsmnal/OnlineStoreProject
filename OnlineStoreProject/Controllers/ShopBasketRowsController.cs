@@ -106,9 +106,17 @@ namespace OnlineStoreProject.Controllers
         [HttpGet("currentShopBasket")]
         public async Task<IEnumerable<ShopBasketRow>> GetWithShopBasketId()
         {
-            if(_currentSession.IsAvailable) await _currentSession.LoadAsync();
+            if(!_currentSession.IsAvailable) await _currentSession.LoadAsync();
             int shopBasketId = int.Parse(_currentSession.GetString("Cart"));
             return await _sbRowRepository.GetWithShopBasketId(shopBasketId);
+        }
+
+        [HttpGet("currentShopBasket/total")]
+        public async Task<decimal> GetTotal()
+        {
+            if (!_currentSession.IsAvailable) await _currentSession.LoadAsync();
+            int shopBasketId = int.Parse(_currentSession.GetString("Cart"));
+            return _sbRowRepository.GetShopBasketTotal(shopBasketId);
         }
 
 
