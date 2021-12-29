@@ -28,10 +28,8 @@ namespace OnlineStoreProject.Controllers
         {
             var category = await _categoryRepository.Get(id);
 
-            if (category == null)
-            {
-                return NotFound();
-            }
+            if (category == null) return NotFound();
+            
 
             return category;
         }
@@ -41,14 +39,7 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> PutCategory(int id, Category category)
         {
-            var existingCategory = await _categoryRepository.Get(id);
-
-            if (existingCategory is null)
-            {
-                return NotFound();
-            }
-
-            await _categoryRepository.Update(category);
+            await _categoryRepository.UpdateCategory(id, category);
             return NoContent();
         }
 
@@ -67,10 +58,8 @@ namespace OnlineStoreProject.Controllers
         {
             var existingCategory = await _categoryRepository.Get(id);
 
-            if (existingCategory is null)
-            {
-                return NotFound();
-            }
+            if (existingCategory is null) return NotFound();
+            
 
             await _categoryRepository.Delete(id);
 
