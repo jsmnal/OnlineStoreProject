@@ -29,7 +29,7 @@ namespace OnlineStoreProject
             //var jwtSettings = Configuration.GetSection("Jwt").Get<JwtSettings>();
             
             services.AddDbContext<OnlineStoreContext>(options => 
-                options.UseSqlServer(Configuration.GetConnectionString("LocalDockerServer"))
+                options.UseSqlServer(Configuration.GetConnectionString("LocalSQLServer"))
             );
             services.AddControllers();
 
