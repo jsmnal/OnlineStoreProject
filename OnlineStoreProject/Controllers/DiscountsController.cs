@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineStoreProject.Data;
 using OnlineStoreProject.Data.DAL;
+using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
 
 namespace OnlineStoreProject.Controllers
@@ -15,30 +16,28 @@ namespace OnlineStoreProject.Controllers
     [ApiController]
     public class DiscountsController : ControllerBase
     {
-        private readonly IRepository<Discount> _repository;
+        private readonly IDiscountRepository _discountRepository;
 
-        public DiscountsController(IRepository<Discount> repository)
+        public DiscountsController(IDiscountRepository discountRepository)
         {
-            _repository = repository;
+            _discountRepository = discountRepository;
         }
 
         // GET: api/Discounts
         [HttpGet]
         public async Task<IEnumerable<Discount>> GetDiscounts()
         {
-            return await _repository.GetAll();
+            return await _discountRepository.GetAll();
         }
 
         // GET: api/Discounts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Discount>> GetDiscount(int id)
         {
-            var discount = await _repository.Get(id);
+            var discount = await _discountRepository.Get(id);
 
-            if (discount is null)
-            {
-                return NotFound();
-            }
+            if (discount is null) return NotFound();
+            
 
             return discount;
         }
@@ -48,13 +47,7 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDiscount(int id, Discount discount)
         {
-            var existingDiscount = await _repository.Get(id);
-            if (existingDiscount is null)
-            {
-                return NotFound();
-            }
-
-            await _repository.Update(discount);
+            await _discountRepository.UpdateDiscount(id, discount);
             return NoContent();
         }
 
@@ -63,7 +56,7 @@ namespace OnlineStoreProject.Controllers
         [HttpPost]
         public async Task<ActionResult<Discount>> PostDiscount(Discount discount)
         {
-            await _repository.Add(discount);
+            await _discountRepository.Add(discount);
             return CreatedAtAction("GetDiscount", new { id = discount.Id }, discount);
         }
 
@@ -71,13 +64,11 @@ namespace OnlineStoreProject.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDiscount(int id)
         {
-            var existingDiscount = await _repository.Get(id);
-            if (existingDiscount is null)
-            {
-                return NotFound();
-            }
+            var existingDiscount = await _discountRepository.Get(id);
+            if (existingDiscount is null) return NotFound();
+            
 
-            await _repository.Delete(id);
+            await _discountRepository.Delete(id);
             return NoContent();
         }
     }

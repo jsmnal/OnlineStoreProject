@@ -60,6 +60,8 @@ namespace OnlineStoreProject
             services.AddScoped<IProductRepository,ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IShopBasketRowRepository, ShopBasketRowRepository>();
+            services.AddScoped<IShopBasketRepository, ShopBasketRepository>();
+            services.AddScoped<IDiscountRepository, DiscountRepository>();
             services.AddHttpContextAccessor();
 
             // TODO: Check options to use in Identity: 

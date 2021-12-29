@@ -39,10 +39,7 @@ namespace OnlineStoreProject.Controllers
         {
             var product = await _productRepository.Get(id);
 
-            if (product is null)
-            {
-                return NotFound();
-            }
+            if (product is null) return NotFound();
 
             return product;
         }
@@ -52,12 +49,7 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
-            var existingProduct = await _productRepository.Get(id);
-            if (existingProduct is null)
-            {
-                return NotFound();
-            }
-            await _productRepository.Update(product);
+            await _productRepository.UpdateProduct(id, product);
             return NoContent();
         }
 
@@ -100,11 +92,8 @@ namespace OnlineStoreProject.Controllers
         public async Task<ActionResult<Product>> PostProduct([FromForm]Product product)
         {
             ImageUpload imageUpload = new(_hostEnvironment);
-            if (product.ImageFile is not null)
-            {
-                product.ImagePath = await imageUpload.Upload(product.ImageFile);
-            };
-            
+            if (product.ImageFile is not null) product.ImagePath = await imageUpload.Upload(product.ImageFile);
+            product.CreatedDate = DateTime.Now;
             await _productRepository.Add(product);
             return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
@@ -114,10 +103,8 @@ namespace OnlineStoreProject.Controllers
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var existingProduct = await _productRepository.Get(id);
-            if (existingProduct is null)
-            {
-                return NotFound();
-            }
+            if (existingProduct is null) return NotFound();
+            
             ImageUpload imageUpload = new(_hostEnvironment);
             imageUpload.Delete(existingProduct);
 

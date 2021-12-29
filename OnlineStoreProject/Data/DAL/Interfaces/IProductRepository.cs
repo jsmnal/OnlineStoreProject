@@ -11,5 +11,6 @@ namespace OnlineStoreProject.Data.DAL
         Task<IEnumerable<Product>> GetNewest(int limit);
         Task<IEnumerable<Product>> GetPopular(int limit);
         Task<IEnumerable<Product>> GetWithCategory(string name);
+        Task<Product> UpdateProduct(int id, Product product);
     }
 }

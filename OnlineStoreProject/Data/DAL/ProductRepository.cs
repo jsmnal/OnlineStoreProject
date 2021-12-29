@@ -39,5 +39,24 @@ namespace OnlineStoreProject.Data.DAL
            return await _context.Products.Include(c => c.Category).Where(p => p.Category.Name.Contains(name)).ToArrayAsync();
         }
 
+        public async Task<Product> UpdateProduct(int id, Product product)
+        {
+            var existingProduct = await _context.Products.FindAsync(id);
+            if (existingProduct is not null)
+            {
+                existingProduct.Name = product.Name;
+                existingProduct.Description = product.Description;
+                existingProduct.StockQuantity = product.StockQuantity;
+                existingProduct.Price = product.Price;
+                existingProduct.ImageFile = product.ImageFile;
+                existingProduct.ImagePath = product.ImagePath;
+                existingProduct.CategoryId = product.CategoryId;
+                existingProduct.DiscountId = product.DiscountId;
+            }
+            _context.Entry(existingProduct).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return existingProduct;
+        }
+
     }
 }

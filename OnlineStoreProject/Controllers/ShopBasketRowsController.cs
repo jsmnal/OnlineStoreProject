@@ -38,10 +38,8 @@ namespace OnlineStoreProject.Controllers
         {
             var shopBasketRow = await _sbRowRepository.Get(id);
 
-            if (shopBasketRow is null)
-            {
-                return NotFound();
-            }
+            if (shopBasketRow is null) return NotFound();
+            
 
             return shopBasketRow;
         }
@@ -51,13 +49,7 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShopBasketRow(int id, ShopBasketRow shopBasketRow)
         {
-            var existingShopBasketRow = await _sbRowRepository.Get(id);
-            if (existingShopBasketRow is null)
-            {
-                return NotFound();
-            }
-
-            await _sbRowRepository.Update(shopBasketRow);
+            await _sbRowRepository.UpdateShopBasketRow(id, shopBasketRow);
             return NoContent();
         }
 
@@ -67,6 +59,7 @@ namespace OnlineStoreProject.Controllers
         public async Task<ActionResult<ShopBasketRow>> PostShopBasketRow(ShopBasketRow shopBasketRow)
         {
             //shopBasketRow.ShopBasketId = int.Parse(Request.Cookies["Cookie"].ToString());
+            if (!_currentSession.IsAvailable) await _currentSession.LoadAsync();
             shopBasketRow.ShopBasketId = int.Parse(_currentSession.GetString("Cart"));
 
             int productId = shopBasketRow.ProductId;
@@ -105,11 +98,7 @@ namespace OnlineStoreProject.Controllers
         public async Task<IActionResult> DeleteShopBasketRow(int id)
         {
             var existingShopBasketRow = await _sbRowRepository.Get(id);
-            if (existingShopBasketRow is null)
-            {
-                return NotFound();
-            }
-
+            if (existingShopBasketRow is null) return NotFound();
             await _sbRowRepository.Delete(id);
             return NoContent();
         }
@@ -117,6 +106,7 @@ namespace OnlineStoreProject.Controllers
         [HttpGet("currentShopBasket")]
         public async Task<IEnumerable<ShopBasketRow>> GetWithShopBasketId()
         {
+            if(_currentSession.IsAvailable) await _currentSession.LoadAsync();
             int shopBasketId = int.Parse(_currentSession.GetString("Cart"));
             return await _sbRowRepository.GetWithShopBasketId(shopBasketId);
         }

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStoreProject.Data.DAL;
+using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
 
 namespace OnlineStoreProject.Controllers
@@ -11,13 +13,13 @@ namespace OnlineStoreProject.Controllers
     [ApiController]
     public class ShopBasketsController : ControllerBase
     {
-        private readonly IRepository<ShopBasket> _repository;
+        private readonly IShopBasketRepository _shopBasketRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private ISession _currentSession => _httpContextAccessor.HttpContext.Session;
 
-        public ShopBasketsController(IRepository<ShopBasket> repository, IHttpContextAccessor httpContextAccessor)
+        public ShopBasketsController(IShopBasketRepository shopBasketRepository, IHttpContextAccessor httpContextAccessor)
         {
-            _repository = repository;
+            _shopBasketRepository = shopBasketRepository;
             _httpContextAccessor = httpContextAccessor;
 
     }
@@ -27,19 +29,17 @@ namespace OnlineStoreProject.Controllers
         [HttpGet]
         public async Task<IEnumerable<ShopBasket>> GetShopBaskets()
         {
-            return await _repository.GetAll();
+            return await _shopBasketRepository.GetAll();
         }
 
         // GET: api/ShopBaskets/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ShopBasket>> GetShopBasket(int id)
         {
-            var shopBasket = await _repository.Get(id);
+            var shopBasket = await _shopBasketRepository.Get(id);
 
-            if (shopBasket == null)
-            {
-                return NotFound();
-            }
+            if (shopBasket == null) return NotFound();
+            
 
             return shopBasket;
         }
@@ -47,15 +47,15 @@ namespace OnlineStoreProject.Controllers
         // PUT: api/ShopBaskets/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShopBasket(int id, ShopBasket shopBasket)
+        public async Task<ActionResult<ShopBasket>> PutShopBasket(int id, ShopBasket shopBasket)
         {
-            var existingShopBasket = await _repository.Get(id);
-            if (existingShopBasket is null)
+            shopBasket.Updated = DateTime.Now;
+            if(shopBasket.SentOrder is true)
             {
-                return NotFound();
+                _currentSession.Clear();
+                
             }
-
-            await _repository.Update(shopBasket);
+            await _shopBasketRepository.UpdateShopBasket(id, shopBasket); 
             return NoContent();
         }
 
@@ -64,10 +64,14 @@ namespace OnlineStoreProject.Controllers
         [HttpPost]
         public async Task<ActionResult<ShopBasket>> PostShopBasket(ShopBasket shopBasket)
         {
+            if (!_currentSession.IsAvailable) await _currentSession.LoadAsync();
+
             shopBasket.SentOrder = false;
+            shopBasket.Created = DateTime.Now;
+            
             if (_currentSession.GetString("Cart") is null)
             {
-                await _repository.Add(shopBasket);
+                await _shopBasketRepository.Add(shopBasket);
                 //Response.Cookies.Append("Cookie", shopBasket.Id.ToString());
                 _currentSession.SetString("Cart", shopBasket.Id.ToString());
                 return CreatedAtAction("GetShopBasket", new { id = shopBasket.Id }, shopBasket);
@@ -82,13 +86,10 @@ namespace OnlineStoreProject.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteShopBasket(int id)
         {
-            var existingShopBasket = await _repository.Get(id);
-            if (existingShopBasket is null)
-            {
-                return NotFound();
-            }
-
-            await _repository.Delete(id);
+            var existingShopBasket = await _shopBasketRepository.Get(id);
+            if (existingShopBasket is null) return NotFound();
+      
+            await _shopBasketRepository.Delete(id);
             return NoContent();
         }
     }
