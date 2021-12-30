@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Image, Container, Row, Col, Button } from 'react-bootstrap';
 
 import productService from '../services/product';
+import shopBasketRowsService from '../services/shopBasketRows';
 import config from '../utils/config';
-import localStorage from '../utils/localStorageUtil';
 
 const Product = () => {
   let params = useParams();
@@ -28,7 +28,16 @@ const Product = () => {
   };
 
   const handleClick = (item) => {
-    localStorage.addItemToCart(item);
+    const basketRow = {
+      quantity: 1,
+      productId: item.id,
+    };
+    try {
+      shopBasketRowsService.createBasketRow(basketRow);
+      productService.decreaseStockQuantity(item.id);
+    } catch (error) {
+      console.log('Error!', error);
+    }
   };
 
   return (

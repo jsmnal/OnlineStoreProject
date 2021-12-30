@@ -1,20 +1,26 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
-import localStorage from '../utils/localStorageUtil';
+import shopBasketRowsService from '../services/shopBasketRows';
+import productService from '../services/product';
 
 const ShoppingCartRow = ({
   id,
+  basketRowId,
   name,
   price,
   category,
   description,
   discount,
-  localStorageId,
   setUpdate,
 }) => {
-  const handleRemove = (id) => {
-    localStorage.removeItemFromCart(id);
-    setUpdate(Date.now);
+  const handleRemove = async (basketId, productId) => {
+    try {
+      shopBasketRowsService.deleteBasketRow(basketId);
+      productService.increaseStockQuantity(productId);
+      setUpdate(Date.now);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <Card className="mb-3">
@@ -26,7 +32,7 @@ const ShoppingCartRow = ({
           {name} | {price} {discount ? `| DISCOUNT: ${discount}%` : ''}
         </Card.Title>
         <Card.Text>{description}</Card.Text>
-        <Button onClick={() => handleRemove(localStorageId)} variant="danger">
+        <Button onClick={() => handleRemove(basketRowId, id)} variant="danger">
           Remove
         </Button>
       </Card.Body>
