@@ -68,26 +68,25 @@ namespace OnlineStoreProject.Controllers
             {
                 var shopBasketRowId = _sbRowRepository.GetSBRowId(productId, shopBasketId);
                 var existingShopBasketRow = await _sbRowRepository.Get(shopBasketRowId);
-                existingShopBasketRow.Quantity += 1;
+                existingShopBasketRow.Quantity += shopBasketRow.Quantity;
                 await _sbRowRepository.Update(existingShopBasketRow);
                 return NoContent();
 
             }
             else
             {
-                shopBasketRow.Quantity = 1;
                 await _sbRowRepository.Add(shopBasketRow);
                 return CreatedAtAction("GetShopBasketRow", new { id = shopBasketRow.Id }, shopBasketRow);
             }
         }
 
         [HttpPut("decreaseQuantity/{id}")]
-        public async Task<IActionResult> DecreaseQuantity(int id)
+        public async Task<IActionResult> DecreaseQuantity(int id, ShopBasketRow shopBasketRow)
         {
             var existingShopBasketRow = await _sbRowRepository.Get(id);
             if (existingShopBasketRow is null) return NotFound();
 
-            existingShopBasketRow.Quantity -= 1;
+            existingShopBasketRow.Quantity -= shopBasketRow.Quantity;
             await _sbRowRepository.Update(existingShopBasketRow);
             return NoContent();
         }
