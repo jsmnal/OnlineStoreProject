@@ -4,11 +4,13 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import productService from '../services/product';
 import shopBasketRowsService from '../services/shopBasketRows';
 import ShoppingCartRow from './ShoppingCartRow';
+import Order from '../components/Order';
 
 const ShoppingCart = () => {
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [update, setUpdate] = useState(null);
+  const [showOrder, setShowOrder] = useState(false);
 
   useEffect(() => {
     getCurrentShoppingCart();
@@ -40,6 +42,10 @@ const ShoppingCart = () => {
     setTotalPrice(response);
   };
 
+  const toggleOrder = () => {
+    setShowOrder(!showOrder);
+  };
+
   return (
     <Container className="text-center">
       <Row className="mt-3">
@@ -59,9 +65,18 @@ const ShoppingCart = () => {
       </Row>
       <Row>
         <Col>
-          <Button variant="primary">Make an order</Button>
+          <Button onClick={toggleOrder} disabled={showOrder} variant="primary">
+            Make an order
+          </Button>
         </Col>
       </Row>
+      {showOrder ? (
+        <Row className="justify-content-md-center">
+          <Col xs={8}>
+            <Order />
+          </Col>
+        </Row>
+      ) : null}
     </Container>
   );
 };
