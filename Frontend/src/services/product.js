@@ -34,11 +34,15 @@ const increaseViewsByOne = async (id) => {
 };
 
 const decreaseStockQuantity = async (id, stockQuantity) => {
-  const response = await axios.put(
-    `${URL}decreaseStockQuantity/${id}`,
-    stockQuantity
-  );
-  return response.data;
+  try {
+    const response = await axios.put(
+      `${URL}decreaseStockQuantity/${id}`,
+      stockQuantity
+    );
+    return response.data;
+  } catch (error) {
+    return { error: error };
+  }
 };
 
 const increaseStockQuantity = async (id, stockQuantity) => {

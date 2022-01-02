@@ -28,14 +28,20 @@ const Product = () => {
     }
   };
 
-  const handleClick = (item) => {
+  const handleClick = async (item) => {
     const basketRow = {
       quantity: 1,
       productId: item.id,
     };
     try {
-      shopBasketRowsService.createBasketRow(basketRow);
-      productService.decreaseStockQuantity(item.id, { stockQuantity: 1 });
+      const res = await productService.decreaseStockQuantity(item.id, {
+        stockQuantity: 1,
+      });
+      if (res.error) {
+        console.log(res);
+        throw new Error('Cont decrease stock quantity');
+      }
+      await shopBasketRowsService.createBasketRow(basketRow);
       setUpdate(Date.now);
     } catch (error) {
       console.log('Error!', error);

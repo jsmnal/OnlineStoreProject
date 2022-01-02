@@ -87,8 +87,8 @@ namespace OnlineStoreProject.Controllers
             if (existingShopBasketRow is null) return NotFound();
             existingShopBasketRow.Quantity -= shopBasketRow.Quantity;
             if(existingShopBasketRow.Quantity >= 0) { 
-            await _sbRowRepository.Update(existingShopBasketRow);
-            return NoContent();
+                await _sbRowRepository.Update(existingShopBasketRow);
+                return NoContent();
             } else
             {
                 return BadRequest();
