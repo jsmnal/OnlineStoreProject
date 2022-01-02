@@ -11,10 +11,11 @@ const Product = () => {
   let navigate = useNavigate();
 
   const [product, setProduct] = useState([]);
+  const [update, setUpdate] = useState(null);
 
   useEffect(() => {
     getProduct(params.id);
-  }, [params.id]);
+  }, [params.id, update]);
 
   const getProduct = async (id) => {
     try {
@@ -34,7 +35,8 @@ const Product = () => {
     };
     try {
       shopBasketRowsService.createBasketRow(basketRow);
-      productService.decreaseStockQuantity(item.id);
+      productService.decreaseStockQuantity(item.id, { stockQuantity: 1 });
+      setUpdate(Date.now);
     } catch (error) {
       console.log('Error!', error);
     }
