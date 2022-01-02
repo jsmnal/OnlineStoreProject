@@ -85,11 +85,15 @@ namespace OnlineStoreProject.Controllers
         {
             var existingShopBasketRow = await _sbRowRepository.Get(id);
             if (existingShopBasketRow is null) return NotFound();
-
             existingShopBasketRow.Quantity -= shopBasketRow.Quantity;
+            if(existingShopBasketRow.Quantity >= 0) { 
             await _sbRowRepository.Update(existingShopBasketRow);
             return NoContent();
-        }
+            } else
+            {
+                return BadRequest();
+            }
+    }
 
 
         // DELETE: api/ShopBasketRows/5
