@@ -76,8 +76,8 @@ namespace OnlineStoreProject
 
 /*            services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
             services.AddAuth(jwtSettings);
-
-            services.AddAutoMapper(typeof(Startup));*/
+*/
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

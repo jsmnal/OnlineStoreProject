@@ -10,6 +10,9 @@ namespace OnlineStoreProject.Mapping
         {
             CreateMap<UserSignUpResource, OnlineStoreUser>()
                 .ForMember(u => u.UserName, opt => opt.MapFrom(ur => ur.Email));
+
+            CreateMap<UserResource, OnlineStoreUser>()
+                .ForMember(u => u.UserName, opt => opt.MapFrom(ur => ur.Email));
         }
     }
 }
