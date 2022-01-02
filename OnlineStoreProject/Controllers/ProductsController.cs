@@ -65,23 +65,23 @@ namespace OnlineStoreProject.Controllers
         }
 
         [HttpPut("decreaseStockQuantity/{id}")]
-        public async Task<IActionResult> DecreaseStockQuantity(int id)
+        public async Task<IActionResult> DecreaseStockQuantity(int id, Product product)
         {
             var existingProduct = await _productRepository.Get(id);
             if (existingProduct is null) return NotFound();
 
-            existingProduct.StockQuantity -= 1;
+            existingProduct.StockQuantity -= product.StockQuantity;
             await _productRepository.Update(existingProduct);
             return NoContent();
         }
 
         [HttpPut("increaseStockQuantity/{id}")]
-        public async Task<IActionResult> IncreaseStockQuantity(int id)
+        public async Task<IActionResult> IncreaseStockQuantity(int id, Product product)
         {
             var existingProduct = await _productRepository.Get(id);
             if (existingProduct is null) return NotFound();
 
-            existingProduct.StockQuantity += 1;
+            existingProduct.StockQuantity += product.StockQuantity;
             await _productRepository.Update(existingProduct);
             return NoContent();
         }

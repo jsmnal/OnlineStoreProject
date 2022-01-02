@@ -34,7 +34,7 @@ namespace OnlineStoreProject.Data.DAL
 
         public decimal GetShopBasketTotal(int shopBasketId)
         {
-            return _context.ShopBasketRows.Where(s => s.ShopBasketId == shopBasketId).Sum(s => s.Product.Price);
+            return _context.ShopBasketRows.Where(s => s.ShopBasketId == shopBasketId).Sum(s => s.Product.Price*s.Quantity); 
         }
 
         public async Task<ShopBasketRow> UpdateShopBasketRow(int id, ShopBasketRow shopBasketRow)
