@@ -21,7 +21,7 @@ namespace OnlineStoreProject.Controllers
            _mapper = mapper;
        }
 
-       [HttpPost("create")]
+       [HttpPost]
         public async Task<IActionResult> Create(UserResource userResource)
         {
             var user = _mapper.Map<UserResource, OnlineStoreUser>(userResource);
@@ -30,7 +30,7 @@ namespace OnlineStoreProject.Controllers
 
             if (userCreateResult.Succeeded)
             {
-                return Created(string.Empty, string.Empty);
+                return Created(string.Empty, user.Id);
             }
 
             return Problem(userCreateResult.Errors.First().Description, null, 500);
