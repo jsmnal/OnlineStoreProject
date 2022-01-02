@@ -8,4 +8,11 @@ const createShopBasket = async (basket) => {
   return response.data;
 };
 
-export default { createShopBasket };
+const updateShopBasket = async (id, basket) => {
+  const response = await axios.put(`${URL}${id}`, basket, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+export default { createShopBasket, updateShopBasket };

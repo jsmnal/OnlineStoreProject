@@ -1,12 +1,33 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
+import userService from '../services/user';
+import shopBasketRowsService from '../services/shopBasketRows';
+import shopBasketsService from '../services/shopBaskets';
 
-const Order = () => {
+const Order = ({ totalPrice }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user);
+    try {
+      const userId = await userService.createUser(user);
+      const currentShoppingCart =
+        await shopBasketRowsService.getCurrentShopBasket();
+      const updatedBasket = {
+        total: totalPrice,
+        sentOrder: true,
+        userId: userId,
+      };
+      await shopBasketsService.updateShopBasket(
+        currentShoppingCart[0].shopBasketId,
+        updatedBasket
+      );
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
