@@ -11,9 +11,12 @@ const Navigation = () => {
   const [cartItemAmount, setCartItemAmount] = useState(0);
 
   useEffect(() => {
-    getCategories();
     getCartItemsAmount();
   }, [location]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   const getCategories = async () => {
     try {
