@@ -7,10 +7,12 @@ import ShoppingCartRow from './ShoppingCartRow';
 
 const ShoppingCart = () => {
   const [products, setProducts] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [update, setUpdate] = useState(null);
 
   useEffect(() => {
     getCurrentShoppingCart();
+    getCurrentShoppingCartTotal();
   }, [update]);
 
   const getCurrentShoppingCart = async () => {
@@ -32,6 +34,12 @@ const ShoppingCart = () => {
     }
   };
 
+  const getCurrentShoppingCartTotal = async () => {
+    const response =
+      await shopBasketRowsService.getCurrentShopBasketsTotalPrice();
+    setTotalPrice(response);
+  };
+
   return (
     <Container className="text-center">
       <Row className="mt-3">
@@ -46,6 +54,7 @@ const ShoppingCart = () => {
           ) : (
             <li>No products in shopping cart</li>
           )}
+          <p>Total price: {totalPrice}$</p>
         </Col>
       </Row>
       <Row>
