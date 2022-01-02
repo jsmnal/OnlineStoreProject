@@ -60,7 +60,7 @@ const ShoppingCart = () => {
           ) : (
             <li>No products in shopping cart</li>
           )}
-          <p>Total price: {totalPrice}$</p>
+          <p>Total price: {totalPrice ?? 0}$</p>
         </Col>
       </Row>
       <Row>
@@ -73,7 +73,7 @@ const ShoppingCart = () => {
       {showOrder ? (
         <Row className="justify-content-md-center">
           <Col xs={8}>
-            <Order />
+            <Order totalPrice={totalPrice ?? 0} />
           </Col>
         </Row>
       ) : null}
