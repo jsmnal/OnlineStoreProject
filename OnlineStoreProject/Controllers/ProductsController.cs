@@ -71,8 +71,14 @@ namespace OnlineStoreProject.Controllers
             if (existingProduct is null) return NotFound();
 
             existingProduct.StockQuantity -= product.StockQuantity;
-            await _productRepository.Update(existingProduct);
-            return NoContent();
+            if (existingProduct.StockQuantity >= 0)
+            {
+                await _productRepository.Update(existingProduct);
+                return NoContent();
+            } else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut("increaseStockQuantity/{id}")]
