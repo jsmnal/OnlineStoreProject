@@ -7,7 +7,7 @@ import ShoppingCartRow from './ShoppingCartRow';
 
 const ShoppingCart = () => {
   const [products, setProducts] = useState([]);
-  const [update, setUpdate] = useState('');
+  const [update, setUpdate] = useState(null);
 
   useEffect(() => {
     getCurrentShoppingCart();
@@ -16,7 +16,6 @@ const ShoppingCart = () => {
   const getCurrentShoppingCart = async () => {
     try {
       const response = await shopBasketRowsService.getCurrentShopBasket();
-      console.log(response);
       const prodArr = [];
       for (let i = 0; i < response.length; i++) {
         let res = await productService.getOne(response[i].productId);
@@ -39,23 +38,9 @@ const ShoppingCart = () => {
         <h3>Shopping Cart</h3>
         <Col>
           {products.length !== 0 ? (
-            products.map((p, indx) => {
+            products.map((p) => {
               return (
-                <ShoppingCartRow
-                  key={indx}
-                  id={p.id}
-                  basketRowId={p.basketRowId}
-                  name={p.name}
-                  price={p.price}
-                  category={p.category.name}
-                  description={p.description}
-                  discount={
-                    p.discount.activityState
-                      ? p.discount.discountPercentage
-                      : null
-                  }
-                  setUpdate={setUpdate}
-                />
+                <ShoppingCartRow key={p.id} product={p} setUpdate={setUpdate} />
               );
             })
           ) : (
