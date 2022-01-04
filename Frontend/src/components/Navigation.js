@@ -2,16 +2,20 @@
 import React, { useState, useEffect } from 'react';
 import categoryService from '../services/category';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import localStorage from '../utils/localStorageUtil';
+import { Link, useLocation } from 'react-router-dom';
+import shopBasketRowsService from '../services/shopBasketRows';
 
 const Navigation = () => {
+  const location = useLocation();
   const [categories, setCategories] = useState([]);
   const [cartItemAmount, setCartItemAmount] = useState(0);
 
   useEffect(() => {
-    getCategories();
     getCartItemsAmount();
+  }, [location]);
+
+  useEffect(() => {
+    getCategories();
   }, []);
 
   const getCategories = async () => {
@@ -23,8 +27,8 @@ const Navigation = () => {
     }
   };
 
-  const getCartItemsAmount = () => {
-    const cart = localStorage.getItemsFromCart();
+  const getCartItemsAmount = async () => {
+    const cart = await shopBasketRowsService.getCurrentShopBasket();
     setCartItemAmount(cart?.length ?? 0);
   };
 

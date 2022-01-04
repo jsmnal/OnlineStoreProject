@@ -4,19 +4,22 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import productService from '../services/product';
 import shopBasketRowsService from '../services/shopBasketRows';
 import ShoppingCartRow from './ShoppingCartRow';
+import Order from '../components/Order';
 
 const ShoppingCart = () => {
   const [products, setProducts] = useState([]);
-  const [update, setUpdate] = useState('');
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [update, setUpdate] = useState(null);
+  const [showOrder, setShowOrder] = useState(false);
 
   useEffect(() => {
     getCurrentShoppingCart();
+    getCurrentShoppingCartTotal();
   }, [update]);
 
   const getCurrentShoppingCart = async () => {
     try {
       const response = await shopBasketRowsService.getCurrentShopBasket();
-      console.log(response);
       const prodArr = [];
       for (let i = 0; i < response.length; i++) {
         let res = await productService.getOne(response[i].productId);
@@ -33,41 +36,47 @@ const ShoppingCart = () => {
     }
   };
 
+  const getCurrentShoppingCartTotal = async () => {
+    const response =
+      await shopBasketRowsService.getCurrentShopBasketsTotalPrice();
+    setTotalPrice(response);
+  };
+
+  const toggleOrder = () => {
+    setShowOrder(!showOrder);
+  };
+
   return (
     <Container className="text-center">
       <Row className="mt-3">
         <h3>Shopping Cart</h3>
         <Col>
           {products.length !== 0 ? (
-            products.map((p, indx) => {
+            products.map((p) => {
               return (
-                <ShoppingCartRow
-                  key={indx}
-                  id={p.id}
-                  basketRowId={p.basketRowId}
-                  name={p.name}
-                  price={p.price}
-                  category={p.category.name}
-                  description={p.description}
-                  discount={
-                    p.discount.activityState
-                      ? p.discount.discountPercentage
-                      : null
-                  }
-                  setUpdate={setUpdate}
-                />
+                <ShoppingCartRow key={p.id} product={p} setUpdate={setUpdate} />
               );
             })
           ) : (
             <li>No products in shopping cart</li>
           )}
+          <p>Total price: {totalPrice ?? 0}$</p>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Button variant="primary">Make an order</Button>
+          <Button onClick={toggleOrder} disabled={showOrder} variant="primary">
+            Make an order
+          </Button>
         </Col>
       </Row>
+      {showOrder ? (
+        <Row className="justify-content-md-center">
+          <Col xs={8}>
+            <Order totalPrice={totalPrice ?? 0} />
+          </Col>
+        </Row>
+      ) : null}
     </Container>
   );
 };

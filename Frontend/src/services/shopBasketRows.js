@@ -15,6 +15,13 @@ const getCurrentShopBasket = async () => {
   return response.data;
 };
 
+const getCurrentShopBasketsTotalPrice = async () => {
+  const response = await axios.get(`${URL}currentShopBasket/total`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
 const deleteBasketRow = async (id) => {
   const response = await axios.delete(`${URL}${id}`, {
     withCredentials: true,
@@ -22,4 +29,9 @@ const deleteBasketRow = async (id) => {
   return response.data;
 };
 
-export default { createBasketRow, getCurrentShopBasket, deleteBasketRow };
+export default {
+  createBasketRow,
+  getCurrentShopBasket,
+  getCurrentShopBasketsTotalPrice,
+  deleteBasketRow,
+};
