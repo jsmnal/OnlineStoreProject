@@ -30,5 +30,18 @@ docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=yourStrong(!)Password" -p 1433:143
 5. Now you can start backend by running `dotnet run`.
 6. Next go to `Frontend/` directory and run `npm install`.
 7. Open `Frontend/src/utils/config.js` and replace the `DEV_BACKEND_URL` and `IMAGE_URL` with the url and port where backend is running. (eg. `https://localhost:5001` and `https://localhost:5001/images/`)
-8. Now you can start frontend by running in `Frontend/` directory: `npm start`.
+8. Now you can start frontend by running in `Frontend/` directory: `HTTPS=true npm start`.
 9. Open browser and go to: `http://localhost:3000`.
+
+### Docker setup with script
+
+You can also pull, start and setup that SQL Server docker image by running `docker_setup.sh` bash script. This script also runs migrations and updates the SQL Server.
+
+**NOTE:** Remember that you need to have Docker, dotnet and dotnet ef cli installed so this script works.
+
+### `build.sh`
+
+Bash script for:
+
+1. Installs frontend packages
+2. Builds backend project
