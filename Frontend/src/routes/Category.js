@@ -26,7 +26,7 @@ const Category = () => {
   };
 
   return (
-    <Container >
+    <Container>
       <Header title={categoryName} />
       <Row className="mt-3">
         {products.map((product) => (

@@ -20,7 +20,7 @@ const AdImageCarousel = () => {
   };
   return (
     <Container style={{ marginTop: '20px', boxShadow: '0 0 2px 2px #765d3a' }}>
-      <Carousel >
+      <Carousel>
         {images.map((image) => (
           <Carousel.Item key={image.id} id={image.id}>
             <img
