@@ -45,3 +45,8 @@ Bash script for:
 
 1. Installs frontend packages
 2. Builds backend project
+
+### Frontend scripts
+
+- `npm run lint` runs ESLint to the frontend project.
+- `npm run format` formats frontend project `src/` with Prettier configs that has been set in `.prettierc`.
