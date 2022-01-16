@@ -30,7 +30,7 @@ docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=yourStrong(!)Password" -p 1433:143
 5. Now you can start backend by running `dotnet run`.
 6. Next go to `Frontend/` directory and run `npm install`.
 7. Open `Frontend/src/utils/config.js` and replace the `DEV_BACKEND_URL` and `IMAGE_URL` with the url and port where backend is running. (eg. `https://localhost:5001` and `https://localhost:5001/images/`)
-8. Now you can start frontend by running in `Frontend/` directory: `HTTPS=true npm start`.
+8. Now you can start frontend by running in `Frontend/` directory: `HTTPS=true npm start` (Linux, macOS) or `set HTTPS=true&&npm start`(Windows).
 9. Open browser and go to: `http://localhost:3000`.
 
 ### Docker setup with script
