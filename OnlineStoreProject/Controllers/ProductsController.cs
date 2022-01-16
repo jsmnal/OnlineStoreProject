@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineStoreProject.Data;
 using OnlineStoreProject.Data.DAL;
 using OnlineStoreProject.Models;
+using OnlineStoreProject.ServiceLayer.Interfaces;
 using OnlineStoreProject.Utils;
 
 namespace OnlineStoreProject.Controllers
@@ -18,26 +19,26 @@ namespace OnlineStoreProject.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IWebHostEnvironment _hostEnvironment;
-        private readonly IProductRepository _productRepository;
+        private readonly IProductService _service;
 
-        public ProductsController(IProductRepository productRepository, IWebHostEnvironment hostEnvironment)
+        public ProductsController(IProductService service, IWebHostEnvironment hostEnvironment)
         {
             _hostEnvironment = hostEnvironment;
-            _productRepository = productRepository;
+            _service = service;
         }
 
         // GET: api/Products
         [HttpGet]
         public async Task<IEnumerable<Product>> GetProducts()
         {
-            return await _productRepository.GetAll();
+            return await _service.GetAll();
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var product = await _productRepository.Get(id);
+            var product = await _service.Get(id);
 
             if (product is null) return NotFound();
 
@@ -49,31 +50,31 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, Product product)
         {
-            await _productRepository.UpdateProduct(id, product);
+            await _service.UpdateProduct(id, product);
             return NoContent();
         }
 
         [HttpPut("increaseView/{id}")]
         public async Task<IActionResult> IncreaseProductsViews(int id)
         {
-            var existingProduct = await _productRepository.Get(id);
+            var existingProduct = await _service.Get(id);
             if (existingProduct is null) return NotFound();
 
             existingProduct.Views += 1;
-            await _productRepository.Update(existingProduct);
+            await _service.Update(existingProduct);
             return NoContent();
         }
 
         [HttpPut("decreaseStockQuantity/{id}")]
         public async Task<IActionResult> DecreaseStockQuantity(int id, Product product)
         {
-            var existingProduct = await _productRepository.Get(id);
+            var existingProduct = await _service.Get(id);
             if (existingProduct is null) return NotFound();
 
             existingProduct.StockQuantity -= product.StockQuantity;
             if (existingProduct.StockQuantity >= 0)
             {
-                await _productRepository.Update(existingProduct);
+                await _service.Update(existingProduct);
                 return NoContent();
             } else
             {
@@ -84,11 +85,11 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("increaseStockQuantity/{id}")]
         public async Task<IActionResult> IncreaseStockQuantity(int id, Product product)
         {
-            var existingProduct = await _productRepository.Get(id);
+            var existingProduct = await _service.Get(id);
             if (existingProduct is null) return NotFound();
 
             existingProduct.StockQuantity += product.StockQuantity;
-            await _productRepository.Update(existingProduct);
+            await _service.Update(existingProduct);
             return NoContent();
         }
 
@@ -100,7 +101,7 @@ namespace OnlineStoreProject.Controllers
             ImageUpload imageUpload = new(_hostEnvironment);
             if (product.ImageFile is not null) product.ImagePath = await imageUpload.Upload(product.ImageFile);
             product.CreatedDate = DateTime.Now;
-            await _productRepository.Add(product);
+            await _service.Add(product);
             return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
 
@@ -108,32 +109,32 @@ namespace OnlineStoreProject.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var existingProduct = await _productRepository.Get(id);
+            var existingProduct = await _service.Get(id);
             if (existingProduct is null) return NotFound();
             
             ImageUpload imageUpload = new(_hostEnvironment);
             imageUpload.Delete(existingProduct);
 
-            await _productRepository.Delete(id);
+            await _service.Delete(id);
             return NoContent();
         }
 
         [HttpGet("limit={limit}")]
         public async Task<IEnumerable<Product>> GetNewest(int limit)
         {
-            return await _productRepository.GetNewest(limit);
+            return await _service.GetNewest(limit);
         }
 
         [HttpGet("category={categoryName}")]
         public async Task<IEnumerable<Product>> GetWithCategoryName(string categoryName)
         {
-            return await _productRepository.GetWithCategory(categoryName);
+            return await _service.GetWithCategory(categoryName);
         }
 
         [HttpGet("popular={limit}")]
         public async Task<IEnumerable<Product>> GetPopular(int limit)
         {
-            return await _productRepository.GetPopular(limit);
+            return await _service.GetPopular(limit);
         }
     }
 }

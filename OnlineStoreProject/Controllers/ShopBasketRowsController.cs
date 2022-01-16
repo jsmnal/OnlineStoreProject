@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineStoreProject.Data.DAL;
 using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
+using OnlineStoreProject.ServiceLayer.Interfaces;
 
 namespace OnlineStoreProject.Controllers
 {
@@ -12,14 +13,14 @@ namespace OnlineStoreProject.Controllers
     [ApiController]
     public class ShopBasketRowsController : ControllerBase
     {
-        private readonly IShopBasketRowRepository _sbRowRepository;
+        private readonly IShopBasketRowService _service;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         private ISession _currentSession => _httpContextAccessor.HttpContext.Session;
 
-        public ShopBasketRowsController(IShopBasketRowRepository repository, IHttpContextAccessor httpContextAccessor)
+        public ShopBasketRowsController(IShopBasketRowService service, IHttpContextAccessor httpContextAccessor)
         {
-            _sbRowRepository = repository;
+            _service = service;
 
             _httpContextAccessor = httpContextAccessor;
 
@@ -29,14 +30,14 @@ namespace OnlineStoreProject.Controllers
         [HttpGet]
         public async Task<IEnumerable<ShopBasketRow>> GetShopBasketRows()
         {
-            return await _sbRowRepository.GetAll();
+            return await _service.GetAll();
         }
 
         // GET: api/ShopBasketRows/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ShopBasketRow>> GetShopBasketRow(int id)
         {
-            var shopBasketRow = await _sbRowRepository.Get(id);
+            var shopBasketRow = await _service.Get(id);
 
             if (shopBasketRow is null) return NotFound();
             
@@ -49,14 +50,14 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutShopBasketRow(int id, ShopBasketRow shopBasketRow)
         {
-            await _sbRowRepository.UpdateShopBasketRow(id, shopBasketRow);
+            await _service.UpdateShopBasketRow(id, shopBasketRow);
             return NoContent();
         }
 
         // POST: api/ShopBasketRows
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ShopBasketRow>> PostShopBasketRow(ShopBasketRow shopBasketRow)
+        public async Task<ActionResult<ShopBasket>> PostShopBasketRow(ShopBasketRow shopBasketRow)
         {
             //shopBasketRow.ShopBasketId = int.Parse(Request.Cookies["Cookie"].ToString());
             if (!_currentSession.IsAvailable) await _currentSession.LoadAsync();
@@ -64,18 +65,18 @@ namespace OnlineStoreProject.Controllers
 
             int productId = shopBasketRow.ProductId;
             int shopBasketId = shopBasketRow.ShopBasketId;
-            if (_sbRowRepository.ProductExists(productId, shopBasketId) is true)
+            if (_service.ProductExists(productId, shopBasketId) is true)
             {
-                var shopBasketRowId = _sbRowRepository.GetSBRowId(productId, shopBasketId);
-                var existingShopBasketRow = await _sbRowRepository.Get(shopBasketRowId);
+                var shopBasketRowId = _service.GetSBRowId(productId, shopBasketId);
+                var existingShopBasketRow = await _service.Get(shopBasketRowId);
                 existingShopBasketRow.Quantity += shopBasketRow.Quantity;
-                await _sbRowRepository.Update(existingShopBasketRow);
+                await _service.Update(existingShopBasketRow);
                 return NoContent();
 
             }
             else
             {
-                await _sbRowRepository.Add(shopBasketRow);
+                await _service.Add(shopBasketRow);
                 return CreatedAtAction("GetShopBasketRow", new { id = shopBasketRow.Id }, shopBasketRow);
             }
         }
@@ -83,11 +84,11 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("decreaseQuantity/{id}")]
         public async Task<IActionResult> DecreaseQuantity(int id, ShopBasketRow shopBasketRow)
         {
-            var existingShopBasketRow = await _sbRowRepository.Get(id);
+            var existingShopBasketRow = await _service.Get(id);
             if (existingShopBasketRow is null) return NotFound();
             existingShopBasketRow.Quantity -= shopBasketRow.Quantity;
             if(existingShopBasketRow.Quantity >= 0) { 
-                await _sbRowRepository.Update(existingShopBasketRow);
+                await _service.Update(existingShopBasketRow);
                 return NoContent();
             } else
             {
@@ -100,9 +101,9 @@ namespace OnlineStoreProject.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteShopBasketRow(int id)
         {
-            var existingShopBasketRow = await _sbRowRepository.Get(id);
+            var existingShopBasketRow = await _service.Get(id);
             if (existingShopBasketRow is null) return NotFound();
-            await _sbRowRepository.Delete(id);
+            await _service.Delete(id);
             return NoContent();
         }
 
@@ -111,7 +112,7 @@ namespace OnlineStoreProject.Controllers
         {
             if(!_currentSession.IsAvailable) await _currentSession.LoadAsync();
             int shopBasketId = int.Parse(_currentSession.GetString("Cart"));
-            return await _sbRowRepository.GetWithShopBasketId(shopBasketId);
+            return await _service.GetWithShopBasketId(shopBasketId);
         }
 
         [HttpGet("currentShopBasket/total")]
@@ -119,7 +120,7 @@ namespace OnlineStoreProject.Controllers
         {
             if (!_currentSession.IsAvailable) await _currentSession.LoadAsync();
             int shopBasketId = int.Parse(_currentSession.GetString("Cart"));
-            return _sbRowRepository.GetShopBasketTotal(shopBasketId);
+            return _service.GetShopBasketTotal(shopBasketId);
         }
 
 

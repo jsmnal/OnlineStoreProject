@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineStoreProject.Data.DAL;
 using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
+using OnlineStoreProject.ServiceLayer.Interfaces;
 
 namespace OnlineStoreProject.Controllers
 {
@@ -13,13 +14,13 @@ namespace OnlineStoreProject.Controllers
     [ApiController]
     public class ShopBasketsController : ControllerBase
     {
-        private readonly IShopBasketRepository _shopBasketRepository;
+        private readonly IShopBasketService _service;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private ISession _currentSession => _httpContextAccessor.HttpContext.Session;
 
-        public ShopBasketsController(IShopBasketRepository shopBasketRepository, IHttpContextAccessor httpContextAccessor)
+        public ShopBasketsController(IShopBasketService service, IHttpContextAccessor httpContextAccessor)
         {
-            _shopBasketRepository = shopBasketRepository;
+            _service = service;
             _httpContextAccessor = httpContextAccessor;
 
     }
@@ -29,14 +30,14 @@ namespace OnlineStoreProject.Controllers
         [HttpGet]
         public async Task<IEnumerable<ShopBasket>> GetShopBaskets()
         {
-            return await _shopBasketRepository.GetAll();
+            return await _service.GetAll();
         }
 
         // GET: api/ShopBaskets/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ShopBasket>> GetShopBasket(int id)
         {
-            var shopBasket = await _shopBasketRepository.Get(id);
+            var shopBasket = await _service.Get(id);
 
             if (shopBasket == null) return NotFound();
             
@@ -47,7 +48,7 @@ namespace OnlineStoreProject.Controllers
         // PUT: api/ShopBaskets/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<ActionResult<ShopBasket>> PutShopBasket(int id, ShopBasket shopBasket)
+        public async Task<IActionResult> PutShopBasket(int id, ShopBasket shopBasket)
         {
             shopBasket.Updated = DateTime.Now;
             if(shopBasket.SentOrder is true)
@@ -55,7 +56,7 @@ namespace OnlineStoreProject.Controllers
                 _currentSession.Clear();
                 
             }
-            await _shopBasketRepository.UpdateShopBasket(id, shopBasket); 
+            await _service.UpdateShopBasket(id, shopBasket); 
             return NoContent();
         }
 
@@ -71,7 +72,7 @@ namespace OnlineStoreProject.Controllers
             
             if (_currentSession.GetString("Cart") is null)
             {
-                await _shopBasketRepository.Add(shopBasket);
+                await _service.Add(shopBasket);
                 //Response.Cookies.Append("Cookie", shopBasket.Id.ToString());
                 _currentSession.SetString("Cart", shopBasket.Id.ToString());
                 return CreatedAtAction("GetShopBasket", new { id = shopBasket.Id }, shopBasket);
@@ -86,10 +87,10 @@ namespace OnlineStoreProject.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteShopBasket(int id)
         {
-            var existingShopBasket = await _shopBasketRepository.Get(id);
+            var existingShopBasket = await _service.Get(id);
             if (existingShopBasket is null) return NotFound();
       
-            await _shopBasketRepository.Delete(id);
+            await _service.Delete(id);
             return NoContent();
         }
     }
