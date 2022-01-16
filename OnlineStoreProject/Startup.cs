@@ -10,6 +10,8 @@ using OnlineStoreProject.Data.DAL.Interfaces;
 using OnlineStoreProject.Models;
 using System;
 using Microsoft.AspNetCore.Http;
+using OnlineStoreProject.ServiceLayer.Interfaces;
+using OnlineStoreProject.ServiceLayer;
 
 namespace OnlineStoreProject
 {
@@ -53,7 +55,7 @@ namespace OnlineStoreProject
 
 
             services.AddScoped<UnitOfWork>();          
-            services.AddScoped<IRepository<Category>, CategoryRepository>();
+/*            services.AddScoped<IRepository<Category>, CategoryRepository>();
             services.AddScoped<IRepository<Discount>, DiscountRepository>();
             services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddScoped<IRepository<ShopBasketRow>, ShopBasketRowRepository>();
@@ -62,7 +64,13 @@ namespace OnlineStoreProject
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IShopBasketRowRepository, ShopBasketRowRepository>();
             services.AddScoped<IShopBasketRepository, ShopBasketRepository>();
-            services.AddScoped<IDiscountRepository, DiscountRepository>();
+            services.AddScoped<IDiscountRepository, DiscountRepository>();*/
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IShopBasketRowService, ShopBasketRowService>();
+            services.AddTransient<IShopBasketService, ShopBasketService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IDiscountService, DiscountService>();
             services.AddHttpContextAccessor();
 
             // TODO: Check options to use in Identity: 

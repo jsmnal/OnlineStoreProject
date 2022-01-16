@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineStoreProject.Data;
 using OnlineStoreProject.Data.DAL;
 using OnlineStoreProject.Models;
+using OnlineStoreProject.ServiceLayer.Interfaces;
 
 namespace OnlineStoreProject.Controllers
 {
@@ -16,17 +17,17 @@ namespace OnlineStoreProject.Controllers
     public class CategoriesController : ControllerBase
     {
         
-        private readonly ICategoryRepository _categoryRepository;
-        public CategoriesController(ICategoryRepository categoryRepository)
+        private readonly ICategoryService _service;
+        public CategoriesController(ICategoryService service)
         {
-            _categoryRepository = categoryRepository;
+            _service = service;
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            var category = await _categoryRepository.Get(id);
+            var category = await _service.Get(id);
 
             if (category == null) return NotFound();
             
@@ -39,7 +40,7 @@ namespace OnlineStoreProject.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> PutCategory(int id, Category category)
         {
-            await _categoryRepository.UpdateCategory(id, category);
+            await _service.UpdateCategory(id, category);
             return NoContent();
         }
 
@@ -48,7 +49,7 @@ namespace OnlineStoreProject.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            await _categoryRepository.Add(category);
+            await _service.Add(category);
             return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
 
@@ -56,12 +57,12 @@ namespace OnlineStoreProject.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteCategory(int id)
         {
-            var existingCategory = await _categoryRepository.Get(id);
+            var existingCategory = await _service.Get(id);
 
             if (existingCategory is null) return NotFound();
             
 
-            await _categoryRepository.Delete(id);
+            await _service.Delete(id);
 
             return NoContent();
         }
@@ -69,13 +70,13 @@ namespace OnlineStoreProject.Controllers
         [HttpGet]
         public  async Task<IEnumerable<Category>> GetCategories()
         {
-            return await _categoryRepository.GetAll();
+            return await _service.GetAll();
         }
 
         [HttpGet("name={name}")]
         public async Task<IEnumerable<Category>> GetWithCategoryName(string name)
         {
-            return await _categoryRepository.GetWithName(name);
+            return await _service.GetWithName(name);
         }
 
     }
