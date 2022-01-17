@@ -28,8 +28,12 @@ const Navigation = () => {
   };
 
   const getCartItemsAmount = async () => {
-    const cart = await shopBasketRowsService.getCurrentShopBasket();
-    setCartItemAmount(cart?.length ?? 0);
+    try {
+      const cart = await shopBasketRowsService.getCurrentShopBasket();
+      setCartItemAmount(cart?.length ?? 0);
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   return (

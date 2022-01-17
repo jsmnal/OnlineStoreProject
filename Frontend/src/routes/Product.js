@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Image, Container, Row, Col, Button } from 'react-bootstrap';
+import { Image, Container, Row, Col, Button, Alert } from 'react-bootstrap';
 
 import productService from '../services/product';
 import shopBasketRowsService from '../services/shopBasketRows';
@@ -12,6 +12,7 @@ const Product = () => {
 
   const [product, setProduct] = useState([]);
   const [update, setUpdate] = useState(null);
+  const [alert, setAlert] = useState({ show: false, variant: null, msg: null });
 
   useEffect(() => {
     getProduct(params.id);
@@ -39,10 +40,26 @@ const Product = () => {
       });
       if (res.error) {
         console.log(res);
-        throw new Error('Cont decrease stock quantity');
+        setAlert({
+          show: true,
+          variant: 'danger',
+          msg: 'Cant add item to cart',
+        });
+        setTimeout(() => {
+          setAlert({ show: false, variant: null, msg: null });
+        }, 2000);
+        throw new Error('Cant decrease stock quantity');
       }
       await shopBasketRowsService.createBasketRow(basketRow);
       setUpdate(Date.now);
+      setAlert({
+        show: true,
+        variant: 'primary',
+        msg: `Successfully added: ${product.name} to cart!`,
+      });
+      setTimeout(() => {
+        setAlert({ show: false, variant: null, msg: null });
+      }, 2000);
     } catch (error) {
       console.log('Error!', error);
     }
@@ -54,6 +71,7 @@ const Product = () => {
         <Col lg={9} className="text-center">
           {product.imagePath ? (
             <Image
+              style={{ maxHeight: '800px', objectFit: 'cover' }}
               className="shadow rounded"
               src={config.IMAGE_URL + product.imagePath}
               fluid
@@ -80,6 +98,13 @@ const Product = () => {
                 Buy now!
               </Button>
             </Col>
+            {alert.show ? (
+              <Row className="mt-2">
+                <Col>
+                  <Alert variant={alert.variant}>{alert.msg}</Alert>
+                </Col>
+              </Row>
+            ) : null}
           </Row>
         </Col>
       </Row>

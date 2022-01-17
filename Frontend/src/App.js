@@ -17,8 +17,12 @@ function App() {
   }, []);
 
   const createEmptyShopBasket = async () => {
-    const response = await shopBasketsService.createShopBasket({ total: 0 });
-    console.log(response);
+    try {
+      const response = await shopBasketsService.createShopBasket({ total: 0 });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
