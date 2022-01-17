@@ -37,9 +37,13 @@ const ShoppingCart = () => {
   };
 
   const getCurrentShoppingCartTotal = async () => {
-    const response =
-      await shopBasketRowsService.getCurrentShopBasketsTotalPrice();
-    setTotalPrice(response);
+    try {
+      const response =
+        await shopBasketRowsService.getCurrentShopBasketsTotalPrice();
+      setTotalPrice(response);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const toggleOrder = () => {

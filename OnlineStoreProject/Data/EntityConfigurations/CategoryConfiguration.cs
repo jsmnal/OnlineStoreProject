@@ -28,6 +28,12 @@ namespace OnlineStoreProject.Data.EntityConfigurations
                     Id = 2,
                     Name = "Nature",
                     Description = "Pictures of beatifull nature"
+                },
+                new Category
+                {
+                    Id = 3,
+                    Name = "Finland",
+                    Description = "Pictures of beatifull finland"
                 }
             );
         }

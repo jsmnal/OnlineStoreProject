@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import userService from '../services/user';
 import shopBasketRowsService from '../services/shopBasketRows';
 import shopBasketsService from '../services/shopBaskets';
 
 const Order = ({ totalPrice }) => {
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [alert, setAlert] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +23,11 @@ const Order = ({ totalPrice }) => {
         currentShoppingCart[0].shopBasketId,
         updatedBasket
       );
-      navigate('/');
+      setAlert(true);
+      setTimeout(() => {
+        setAlert(false);
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       console.log(error);
     }
@@ -85,6 +88,13 @@ const Order = ({ totalPrice }) => {
       <Button variant="primary" type="submit">
         Submit
       </Button>
+      {alert ? (
+        <Row className="mt-2">
+          <Col>
+            <Alert variant="primary">Order has been send!</Alert>
+          </Col>
+        </Row>
+      ) : null}
     </Form>
   );
 };

@@ -24,7 +24,7 @@ const AdImageCarousel = () => {
         {images.map((image) => (
           <Carousel.Item key={image.id} id={image.id}>
             <img
-              style={{ height: '400px' }}
+              style={{ height: '400px', objectFit: 'cover' }}
               className="d-block w-100"
               src={image.imagePath ? config.IMAGE_URL + image.imagePath : ''}
               alt="Image"
